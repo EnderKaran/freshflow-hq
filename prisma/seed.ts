@@ -3,6 +3,7 @@ config();
 
 // Sadece standart Node.js client
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -14,6 +15,7 @@ async function main() {
   await prisma.sale.deleteMany({});
   await prisma.product.deleteMany({});
   await prisma.inventory.deleteMany({});
+  await (prisma as any).user.deleteMany({});
 
   // 1. Envanter Kalemleri
   const wagyu = await prisma.inventory.create({
@@ -45,6 +47,15 @@ async function main() {
   const classicBurger = await prisma.product.create({
     data: { name: 'Classic Burger' }
   });
+
+  const hashedPassword = await bcrypt.hash("ender123", 10);
+await (prisma as any).user.create({
+  data: {
+    email: "ender@freshflow.com",
+    password: hashedPassword,
+    name: "Ender Karan"
+  }
+});
 
   // 3. Reçeteler
   await prisma.recipe.createMany({
