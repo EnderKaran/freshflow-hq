@@ -36,9 +36,9 @@ export default function LandingPage() {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-8 items-center">
-              <Link className="text-forest-green/80 dark:text-gray-300 hover:text-leaf-green dark:hover:text-primary transition-colors font-medium" href="#">Solutions</Link>
-              <Link className="text-forest-green/80 dark:text-gray-300 hover:text-leaf-green dark:hover:text-primary transition-colors font-medium" href="#">Sustainability</Link>
-              <Link className="text-forest-green/80 dark:text-gray-300 hover:text-leaf-green dark:hover:text-primary transition-colors font-medium" href="#">Pricing</Link>
+              <Link className="text-forest-green/80 dark:text-gray-300 hover:text-leaf-green dark:hover:text-primary transition-colors font-medium" href="/solutions">Solutions</Link>
+              <Link className="text-forest-green/80 dark:text-gray-300 hover:text-leaf-green dark:hover:text-primary transition-colors font-medium" href="/sustainability">Sustainability</Link>
+              <Link className="text-forest-green/80 dark:text-gray-300 hover:text-leaf-green dark:hover:text-primary transition-colors font-medium" href="/pricing">Pricing</Link>
               <Link className="text-forest-green dark:text-white font-semibold hover:opacity-80 transition-opacity" href="/dashboard">Login</Link>
               <Link className="bg-primary hover:bg-primary-dark text-forest-green dark:text-background-dark font-bold px-6 py-2.5 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:-translate-y-0.5" href="/dashboard">
                 Get Started
