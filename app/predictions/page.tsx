@@ -1,20 +1,43 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { SalesChart } from "@/components/SalesChart";
 
 export default function Predictions() {
+  // Mobil menü için state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="bg-fresh-rose text-fresh-forest font-display min-h-screen selection:bg-fresh-salmon selection:text-fresh-forest">
       {/* Sidebar & Mobile Nav Wrapper */}
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex h-screen overflow-hidden relative">
         
-        {/* Sidebar (Desktop) */}
-        <aside className="hidden md:flex flex-col w-64 bg-white/90 border-r border-fresh-forest/10 h-full p-6 relative z-10">
-          <div className="flex items-center gap-3 mb-10">
-            <div className="w-8 h-8 rounded-lg bg-fresh-primary flex items-center justify-center text-fresh-forest font-bold text-xl">F</div>
-            <h1 className="text-xl font-bold tracking-tight">FreshFlow</h1>
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-fresh-forest/20 backdrop-blur-sm z-40 md:hidden"
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Sidebar (Desktop & Mobile) */}
+        <aside className={`fixed md:relative z-50 flex flex-col w-64 bg-white/95 backdrop-blur-md md:bg-white/90 border-r border-fresh-forest/10 h-full p-6 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
+          <div className="flex items-center justify-between mb-10">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-fresh-primary flex items-center justify-center text-fresh-forest font-bold text-xl">F</div>
+              <h1 className="text-xl font-bold tracking-tight">FreshFlow</h1>
+            </div>
+            {/* Mobile Close Button */}
+            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden text-fresh-forest/60 hover:text-fresh-forest">
+              <span className="material-icons-round">close</span>
+            </button>
           </div>
           
           <nav className="space-y-2 flex-1">
@@ -22,7 +45,7 @@ export default function Predictions() {
               <span className="material-icons-round text-xl">dashboard</span>
               Dashboard
             </Link>
-            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest transition-colors" href="#">
+            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest transition-colors" href="/inventory">
               <span className="material-icons-round text-xl">inventory_2</span>
               Inventory
             </Link>
@@ -31,7 +54,7 @@ export default function Predictions() {
               Predictions
               <span className="ml-auto w-2 h-2 rounded-full bg-fresh-primary"></span>
             </Link>
-            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest transition-colors" href="#">
+            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest transition-colors" href="/staffing">
               <span className="material-icons-round text-xl">people</span>
               Staffing
             </Link>
@@ -49,7 +72,7 @@ export default function Predictions() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto relative p-4 md:p-8 lg:p-12">
+        <main className="flex-1 overflow-y-auto relative p-4 md:p-8 lg:p-12 w-full">
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-fresh-primary/20 rounded-full blur-3xl -z-10 -translate-x-1/3 translate-y-1/3"></div>
@@ -60,7 +83,7 @@ export default function Predictions() {
               <div className="w-8 h-8 rounded-lg bg-fresh-primary flex items-center justify-center text-fresh-forest font-bold">F</div>
               <h1 className="text-lg font-bold">FreshFlow</h1>
             </div>
-            <button className="p-2 text-fresh-forest">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 text-fresh-forest hover:bg-white/50 rounded-lg transition-colors">
               <span className="material-icons-round">menu</span>
             </button>
           </header>
@@ -70,7 +93,7 @@ export default function Predictions() {
             {/* Top Section: Weather & KPI */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
-              {/* Weather Widget */}
+              {/* Weather Widget - Localized */}
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -89,12 +112,12 @@ export default function Predictions() {
                   </div>
                   <div className="bg-fresh-forest/10 px-3 py-1 rounded-full flex items-center gap-1">
                     <span className="material-icons-round text-sm">location_on</span>
-                    <span className="text-xs font-bold">Portland, OR</span>
+                    <span className="text-xs font-bold">Bursa, TR</span>
                   </div>
                 </div>
                 
                 <div className="relative z-10 mt-auto flex items-end gap-4">
-                  <span className="text-5xl font-light">62°</span>
+                  <span className="text-5xl font-light">16°C</span>
                   <div className="flex flex-col pb-1">
                     <span className="text-xs font-bold text-fresh-leaf">High Precipitation</span>
                     <span className="text-xs text-fresh-forest/60">Expect lower foot traffic</span>
@@ -192,7 +215,7 @@ export default function Predictions() {
               </div>
               
               {/* Decorative Background Graphic */}
-              <div className="absolute right-0 bottom-0 h-full w-1/3 opacity-5 pointer-events-none">
+              <div className="absolute right-0 bottom-0 h-full w-1/3 opacity-5 pointer-events-none hidden md:block">
                 <img alt="Abstract green data pattern" className="w-full h-full object-cover" style={{ maskImage: "linear-gradient(to left, black, transparent)" }} src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfrqWdSCYzLZ3bFyANPXuNGXRPGPMp8zHir60Vpuie3nfMquz_BKOiMHHDotrf0enhZ7zIbcnld_rlDT1gs4PnG0XODpLuajo7gODCFW1UuX6QjA5zEqla0s4VNAD7rFyXP_HsbAB_1z4b7q76QK1sT95FSEgurDzIYnugiVL4iFAriOlsMyEVEPehk0hPzUgMA5UZ4hvvHHep9j_ZRekmx3-pnHEMt4uoGl-RhP7Nr054Z5hrY763Undaxfo4nNp69ETMjM69gec"/>
               </div>
             </motion.div>
@@ -212,10 +235,25 @@ export default function Predictions() {
                   </h3>
                   <p className="text-fresh-forest/60 text-sm mt-1">Visualizing impact of precipitation on meat-based dish orders.</p>
                 </div>
-                <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
-                  <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest">Week</button>
-                  <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Month</button>
-                  <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Quarter</button>
+
+                <div className="flex flex-col items-end gap-3">
+                  {/* Clean Legend (No Radio Buttons) */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full bg-fresh-leaf shadow-sm"></span>
+                      <span className="text-xs font-bold text-fresh-forest/70">Sales Volume</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full border-2 border-dashed border-fresh-leaf"></span>
+                      <span className="text-xs font-bold text-fresh-forest/70">Rainfall (mm)</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
+                    <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest">Week</button>
+                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Month</button>
+                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Quarter</button>
+                  </div>
                 </div>
               </div>
               

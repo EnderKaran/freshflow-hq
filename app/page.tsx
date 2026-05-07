@@ -1,10 +1,21 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 export default function LandingPage() {
+  // Mobil menü görünürlüğünü kontrol eden state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Newsletter form submit handler
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Bülten kayıt API'si buraya eklenecek
+    console.log("Newsletter subscription triggered");
+  };
+
   return (
     <>
       {/* Navigation */}
@@ -22,6 +33,8 @@ export default function LandingPage() {
               </div>
               <span className="font-bold text-2xl tracking-tight text-forest-green dark:text-white">FreshFlow</span>
             </div>
+            
+            {/* Desktop Menu */}
             <div className="hidden md:flex space-x-8 items-center">
               <Link className="text-forest-green/80 dark:text-gray-300 hover:text-leaf-green dark:hover:text-primary transition-colors font-medium" href="#">Solutions</Link>
               <Link className="text-forest-green/80 dark:text-gray-300 hover:text-leaf-green dark:hover:text-primary transition-colors font-medium" href="#">Sustainability</Link>
@@ -31,13 +44,44 @@ export default function LandingPage() {
                 Get Started
               </Link>
             </div>
+
+            {/* Mobile Menu Toggle Button */}
             <div className="md:hidden flex items-center">
-              <button className="text-forest-green dark:text-white hover:text-leaf-green focus:outline-none" type="button">
-                <span className="material-icons-round text-3xl">menu</span>
+              <button 
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-forest-green dark:text-white hover:text-leaf-green focus:outline-none p-2" 
+                type="button"
+              >
+                <span className="material-icons-round text-3xl">
+                  {isMobileMenuOpen ? "close" : "menu"}
+                </span>
               </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-white dark:bg-background-dark border-b border-forest-green/10 dark:border-white/10 overflow-hidden"
+            >
+              <div className="px-4 pt-2 pb-6 space-y-4 flex flex-col">
+                <Link onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-forest-green dark:text-gray-300 font-medium" href="#">Solutions</Link>
+                <Link onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-forest-green dark:text-gray-300 font-medium" href="#">Sustainability</Link>
+                <Link onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-forest-green dark:text-gray-300 font-medium" href="#">Pricing</Link>
+                <div className="h-px bg-forest-green/10 dark:bg-white/10 my-2 w-full"></div>
+                <Link onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-forest-green dark:text-white font-semibold" href="/dashboard">Login</Link>
+                <Link onClick={() => setIsMobileMenuOpen(false)} className="block w-full text-center bg-primary text-forest-green font-bold px-6 py-3 rounded-lg" href="/dashboard">
+                  Get Started
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* Hero Section */}
@@ -329,14 +373,27 @@ export default function LandingPage() {
             <div>
               <h4 className="font-bold mb-4 text-primary">Stay Fresh</h4>
               <p className="text-sm text-white/70 mb-4">Subscribe to our newsletter for tips on sustainable kitchen management.</p>
-              <form className="flex flex-col gap-2">
-                <input className="bg-white/10 border border-white/20 rounded px-4 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter your email" type="email"/>
-                <button className="bg-primary text-forest-green font-bold text-sm px-4 py-2 rounded hover:bg-white hover:text-forest-green transition-colors" type="button">Subscribe</button>
+              
+              {/* Güncellenmiş Form (onSubmit ve type="submit" eklendi) */}
+              <form className="flex flex-col gap-2" onSubmit={handleSubscribe}>
+                <input 
+                  className="bg-white/10 border border-white/20 rounded px-4 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                  placeholder="Enter your email" 
+                  type="email"
+                  required
+                />
+                <button 
+                  className="bg-primary text-forest-green font-bold text-sm px-4 py-2 rounded hover:bg-white hover:text-forest-green transition-colors" 
+                  type="submit"
+                >
+                  Subscribe
+                </button>
               </form>
             </div>
           </div>
           <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
-            <p>© 2023 FreshFlow Inc. All rights reserved.</p>
+            {/* Dinamik Tarih Eklendi */}
+            <p>© {new Date().getFullYear()} FreshFlow Inc. All rights reserved.</p>
             <div className="flex gap-6">
               <Link className="hover:text-white" href="#">Privacy Policy</Link>
               <Link className="hover:text-white" href="#">Terms of Service</Link>

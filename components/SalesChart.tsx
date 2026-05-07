@@ -9,7 +9,8 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  ScriptableContext
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -34,17 +35,9 @@ export function SalesChart() {
     },
     plugins: {
       legend: {
-        position: 'top' as const,
-        align: 'end' as const,
-        labels: {
-          usePointStyle: true,
-          boxWidth: 8,
-          font: {
-            family: "'Space Grotesk', sans-serif",
-            size: 12
-          },
-          color: '#3A6F43'
-        }
+        // DİKKAT: Predictions sayfasında özel HTML lejant yaptığımız için 
+        // Chart.js'in dahili lejantını burada tamamen gizliyoruz.
+        display: false, 
       },
       tooltip: {
         backgroundColor: '#10221b',
@@ -107,13 +100,15 @@ export function SalesChart() {
         label: 'Sales Volume (Orders)',
         data: [120, 115, 80, 85, 140, 160, 130],
         borderColor: '#59AC77',
-        backgroundColor: (context: any) => {
+        // 'any' tipi kaldırılarak strict type güvenliği sağlandı
+        backgroundColor: (context: ScriptableContext<'line'>) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
           
           if (!chartArea) {
-            return null;
+            return 'transparent';
           }
+          
           const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
           gradient.addColorStop(0, 'rgba(89, 172, 119, 0)');
           gradient.addColorStop(1, 'rgba(89, 172, 119, 0.2)');

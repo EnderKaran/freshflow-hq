@@ -2,9 +2,66 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+
+// --- MOCK VERİ (Prisma'dan gelecek yapı) ---
+const INITIAL_ORDERS = [
+  { id: 'bb-402', supplier: 'Golden Wheat Co.', category: 'Bakery & Grains', name: 'Brioche Buns', sku: 'BB-402', unit: 'Pack of 12', icon: 'lunch_dining', color: 'orange', defaultQty: 150, price: 0.50, aiAdjusted: true, aiMessage: '+15% for projected Friday rush' },
+  { id: 'fl-220', supplier: 'Golden Wheat Co.', category: 'Bakery & Grains', name: 'Whole Grain Flour', sku: 'FL-220', unit: '50lb Bag', icon: 'grain', color: 'yellow', defaultQty: 5, price: 22.00, aiAdjusted: false },
+  { id: 'bf-101', supplier: 'Local Farms Inc.', category: 'Fresh Produce & Meats', name: 'Premium Beef Patties', sku: 'BF-101', unit: 'Per lb', icon: 'set_meal', color: 'red', defaultQty: 200, price: 4.50, aiAdjusted: true, aiMessage: 'Seasonal adjustment applied' },
+  { id: 'veg-005', supplier: 'Local Farms Inc.', category: 'Fresh Produce & Meats', name: 'Organic Lettuce', sku: 'VEG-005', unit: 'Heads', icon: 'eco', color: 'green', defaultQty: 30, price: 1.20, aiAdjusted: false },
+  { id: 'veg-012', supplier: 'Local Farms Inc.', category: 'Fresh Produce & Meats', name: 'Roma Tomatoes', sku: 'VEG-012', unit: 'Crates', icon: 'local_pizza', color: 'red', defaultQty: 12, price: 27.50, aiAdjusted: true, aiMessage: 'Reduced due to lower forecast' },
+];
 
 export default function ReviewOrder() {
+  // --- STATE YÖNETİMİ ---
+  // Hangi ürünlerin seçili olduğunu tutar (Checkbox)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(INITIAL_ORDERS.map(item => item.id)));
+  // Her ürünün miktarını tutar (Input)
+  const [quantities, setQuantities] = useState<Record<string, number>>(
+    INITIAL_ORDERS.reduce((acc, item) => ({ ...acc, [item.id]: item.defaultQty }), {})
+  );
+
+  // --- MATEMATİKSEL HESAPLAMALAR (Canlı) ---
+  const { subtotal, tax, delivery, total } = useMemo(() => {
+    const currentSubtotal = INITIAL_ORDERS.reduce((sum, item) => {
+      if (selectedIds.has(item.id)) {
+        return sum + (quantities[item.id] || 0) * item.price;
+      }
+      return sum;
+    }, 0);
+
+    const calculatedTax = currentSubtotal * 0.08; // %8 Vergi
+    const calculatedDelivery = currentSubtotal > 0 ? 45.00 : 0; // Sabit teslimat ücreti
+    
+    return {
+      subtotal: currentSubtotal,
+      tax: calculatedTax,
+      delivery: calculatedDelivery,
+      total: currentSubtotal + calculatedTax + calculatedDelivery
+    };
+  }, [quantities, selectedIds]);
+
+  // Handler Functions
+  const handleQuantityChange = (id: string, value: string) => {
+    const newQty = parseInt(value, 10) || 0;
+    setQuantities(prev => ({ ...prev, [id]: newQty >= 0 ? newQty : 0 }));
+  };
+
+  const toggleSelection = (id: string) => {
+    const newSelection = new Set(selectedIds);
+    if (newSelection.has(id)) newSelection.delete(id);
+    else newSelection.add(id);
+    setSelectedIds(newSelection);
+  };
+
+  // Veriyi tedarikçilere göre gruplama
+  const groupedOrders = INITIAL_ORDERS.reduce((acc, item) => {
+    if (!acc[item.category]) acc[item.category] = { supplier: item.supplier, items: [] };
+    acc[item.category].items.push(item);
+    return acc;
+  }, {} as Record<string, { supplier: string, items: typeof INITIAL_ORDERS }>);
+
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-800 dark:text-white font-manrope min-h-screen flex flex-col">
       {/* Header Navigation */}
@@ -53,216 +110,94 @@ export default function ReviewOrder() {
         </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-8 items-start">
+          
           {/* Left Column: Supply Checklist */}
           <div className="w-full lg:w-2/3 flex flex-col gap-6">
             
-            {/* Supplier Group: Bakery & Grains */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-white dark:bg-neutral-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden"
-            >
-              <div className="px-6 py-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-white/5">
-                <div className="flex items-center gap-3">
-                  <span className="material-icons-round text-slate-400">bakery_dining</span>
-                  <h3 className="font-semibold text-slate-800 dark:text-white">Bakery & Grains</h3>
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">Supplier: Golden Wheat Co.</span>
+            {/* Dynamic Supplier Groups */}
+            {Object.entries(groupedOrders).map(([category, data], index) => (
+              <motion.div 
+                key={category}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 + (index * 0.1) }}
+                className="bg-white dark:bg-neutral-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden"
+              >
+                <div className="px-6 py-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-white/5">
+                  <div className="flex items-center gap-3">
+                    <span className="material-icons-round text-slate-400">{index === 0 ? 'bakery_dining' : 'restaurant'}</span>
+                    <h3 className="font-semibold text-slate-800 dark:text-white">{category}</h3>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">Supplier: {data.supplier}</span>
+                  </div>
+                  <button className="text-sm text-primary font-medium hover:text-primary-dark transition-colors">Edit Supplier</button>
                 </div>
-                <button className="text-sm text-primary font-medium hover:text-primary-dark transition-colors">Edit Supplier</button>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="text-xs font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-white/5">
-                      <th className="px-6 py-3 w-12 text-center">
-                        <input defaultChecked className="checkbox-custom rounded border-slate-300 text-forest-green focus:ring-forest-green" type="checkbox"/>
-                      </th>
-                      <th className="px-6 py-3">Item Details</th>
-                      <th className="px-6 py-3 w-32">AI Qty</th>
-                      <th className="px-6 py-3 text-right">Unit Price</th>
-                      <th className="px-6 py-3 text-right">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                    {/* Row 1 */}
-                    <tr className="group hover:bg-primary/5 transition-colors">
-                      <td className="px-6 py-4 text-center">
-                        <input defaultChecked className="checkbox-custom rounded border-slate-300 text-forest-green focus:ring-forest-green" type="checkbox"/>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-lg bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-600 dark:text-orange-400">
-                            <span className="material-icons-round text-xl">lunch_dining</span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-slate-900 dark:text-white">Brioche Buns</p>
-                            <p className="text-xs text-slate-500">Pack of 12 • SKU: BB-402</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="relative">
-                          <input className="w-full pl-3 pr-8 py-1.5 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-neutral-surface-dark text-slate-900 dark:text-white text-sm focus:border-primary focus:ring-primary" type="number" defaultValue="150"/>
-                          <div className="absolute right-2 top-1.5 group/tooltip cursor-help">
-                            <span className="material-icons-round text-primary text-sm opacity-70">psychology</span>
-                            {/* Tooltip */}
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-800 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-10 text-center">
-                                +15% for projected Friday rush
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="text-xs font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-white/5">
+                        <th className="px-6 py-3 w-12 text-center">Status</th>
+                        <th className="px-6 py-3">Item Details</th>
+                        <th className="px-6 py-3 w-32">AI Qty</th>
+                        <th className="px-6 py-3 text-right">Unit Price</th>
+                        <th className="px-6 py-3 text-right">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                      {data.items.map((item) => (
+                        <tr key={item.id} className={`group transition-colors ${selectedIds.has(item.id) ? 'hover:bg-primary/5' : 'bg-slate-50/50 dark:bg-white/5 opacity-60'}`}>
+                          <td className="px-6 py-4 text-center">
+                            <input 
+                              checked={selectedIds.has(item.id)}
+                              onChange={() => toggleSelection(item.id)}
+                              className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer transition-all" 
+                              type="checkbox"
+                            />
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-4">
+                              <div className={`h-10 w-10 rounded-lg flex items-center justify-center bg-${item.color}-50 dark:bg-${item.color}-900/20 text-${item.color}-600 dark:text-${item.color}-400`}>
+                                <span className="material-icons-round text-xl">{item.icon}</span>
+                              </div>
+                              <div>
+                                <p className="font-medium text-slate-900 dark:text-white">{item.name}</p>
+                                <p className="text-xs text-slate-500">{item.unit} • SKU: {item.sku}</p>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right text-slate-600 dark:text-slate-300 tabular-nums">$0.50</td>
-                      <td className="px-6 py-4 text-right font-medium text-slate-900 dark:text-white tabular-nums">$75.00</td>
-                    </tr>
-                    {/* Row 2 */}
-                    <tr className="group hover:bg-primary/5 transition-colors">
-                      <td className="px-6 py-4 text-center">
-                        <input defaultChecked className="checkbox-custom rounded border-slate-300 text-forest-green focus:ring-forest-green" type="checkbox"/>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
-                            <span className="material-icons-round text-xl">grain</span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-slate-900 dark:text-white">Whole Grain Flour</p>
-                            <p className="text-xs text-slate-500">50lb Bag • SKU: FL-220</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="relative">
-                          <input className="w-full pl-3 pr-8 py-1.5 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-neutral-surface-dark text-slate-900 dark:text-white text-sm focus:border-primary focus:ring-primary" type="number" defaultValue="5"/>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right text-slate-600 dark:text-slate-300 tabular-nums">$22.00</td>
-                      <td className="px-6 py-4 text-right font-medium text-slate-900 dark:text-white tabular-nums">$110.00</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </motion.div>
-
-            {/* Supplier Group: Produce & Meats */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-white dark:bg-neutral-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden"
-            >
-              <div className="px-6 py-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-white/5">
-                <div className="flex items-center gap-3">
-                  <span className="material-icons-round text-slate-400">restaurant</span>
-                  <h3 className="font-semibold text-slate-800 dark:text-white">Fresh Produce & Meats</h3>
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">Supplier: Local Farms Inc.</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="relative">
+                              <input 
+                                value={quantities[item.id]}
+                                onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                                disabled={!selectedIds.has(item.id)}
+                                className="w-full pl-3 pr-8 py-1.5 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-neutral-surface-dark text-slate-900 dark:text-white text-sm focus:border-primary focus:ring-primary disabled:opacity-50" 
+                                type="number" 
+                                min="0"
+                              />
+                              {item.aiAdjusted && (
+                                <div className="absolute right-2 top-1.5 group/tooltip cursor-help">
+                                  <span className="material-icons-round text-primary text-sm opacity-70">psychology</span>
+                                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-800 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-10 text-center pointer-events-none">
+                                      {item.aiMessage}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-right text-slate-600 dark:text-slate-300 tabular-nums">
+                            ${item.price.toFixed(2)}
+                          </td>
+                          <td className="px-6 py-4 text-right font-medium text-slate-900 dark:text-white tabular-nums">
+                            ${(quantities[item.id] * item.price).toFixed(2)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <button className="text-sm text-primary font-medium hover:text-primary-dark transition-colors">Edit Supplier</button>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="text-xs font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-white/5">
-                      <th className="px-6 py-3 w-12 text-center">
-                        <input defaultChecked className="checkbox-custom rounded border-slate-300 text-forest-green focus:ring-forest-green" type="checkbox"/>
-                      </th>
-                      <th className="px-6 py-3">Item Details</th>
-                      <th className="px-6 py-3 w-32">AI Qty</th>
-                      <th className="px-6 py-3 text-right">Unit Price</th>
-                      <th className="px-6 py-3 text-right">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                    {/* Row 3 */}
-                    <tr className="group hover:bg-primary/5 transition-colors">
-                      <td className="px-6 py-4 text-center">
-                        <input defaultChecked className="checkbox-custom rounded border-slate-300 text-forest-green focus:ring-forest-green" type="checkbox"/>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-600 dark:text-red-400">
-                            <span className="material-icons-round text-xl">set_meal</span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-slate-900 dark:text-white">Premium Beef Patties</p>
-                            <p className="text-xs text-slate-500">Per lb • SKU: BF-101</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="relative">
-                          <input className="w-full pl-3 pr-8 py-1.5 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-neutral-surface-dark text-slate-900 dark:text-white text-sm focus:border-primary focus:ring-primary" type="number" defaultValue="200"/>
-                          <div className="absolute right-2 top-1.5 group/tooltip cursor-help">
-                            <span className="material-icons-round text-primary text-sm opacity-70">psychology</span>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-800 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-10 text-center">
-                                Seasonal adjustment applied
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right text-slate-600 dark:text-slate-300 tabular-nums">$4.50</td>
-                      <td className="px-6 py-4 text-right font-medium text-slate-900 dark:text-white tabular-nums">$900.00</td>
-                    </tr>
-                    {/* Row 4 */}
-                    <tr className="group hover:bg-primary/5 transition-colors">
-                      <td className="px-6 py-4 text-center">
-                        <input defaultChecked className="checkbox-custom rounded border-slate-300 text-forest-green focus:ring-forest-green" type="checkbox"/>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-forest-green">
-                            <span className="material-icons-round text-xl">eco</span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-slate-900 dark:text-white">Organic Lettuce</p>
-                            <p className="text-xs text-slate-500">Heads • SKU: VEG-005</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="relative">
-                          <input className="w-full pl-3 pr-8 py-1.5 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-neutral-surface-dark text-slate-900 dark:text-white text-sm focus:border-primary focus:ring-primary" type="number" defaultValue="30"/>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right text-slate-600 dark:text-slate-300 tabular-nums">$1.20</td>
-                      <td className="px-6 py-4 text-right font-medium text-slate-900 dark:text-white tabular-nums">$36.00</td>
-                    </tr>
-                    {/* Row 5 */}
-                    <tr className="group hover:bg-primary/5 transition-colors">
-                      <td className="px-6 py-4 text-center">
-                        <input defaultChecked className="checkbox-custom rounded border-slate-300 text-forest-green focus:ring-forest-green" type="checkbox"/>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-600 dark:text-red-400">
-                            <span className="material-icons-round text-xl">local_pizza</span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-slate-900 dark:text-white">Roma Tomatoes</p>
-                            <p className="text-xs text-slate-500">Crates • SKU: VEG-012</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="relative">
-                          <input className="w-full pl-3 pr-8 py-1.5 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-neutral-surface-dark text-slate-900 dark:text-white text-sm focus:border-primary focus:ring-primary" type="number" defaultValue="12"/>
-                          <div className="absolute right-2 top-1.5 group/tooltip cursor-help">
-                            <span className="material-icons-round text-primary text-sm opacity-70">psychology</span>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-800 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-10 text-center">
-                                Reduced due to lower forecast
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right text-slate-600 dark:text-slate-300 tabular-nums">$27.50</td>
-                      <td className="px-6 py-4 text-right font-medium text-slate-900 dark:text-white tabular-nums">$330.00</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </motion.div>
-
+              </motion.div>
+            ))}
           </div>
 
           {/* Right Column: Sticky Summary Panel */}
@@ -277,16 +212,29 @@ export default function ReviewOrder() {
             >
               <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Order Summary</h2>
               
+              {/* Dynamic Financial Breakdowns */}
+              <div className="space-y-3 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500 dark:text-slate-400">Subtotal</span>
+                  <span className="font-medium text-slate-900 dark:text-white tabular-nums">${subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500 dark:text-slate-400">Estimated Tax (8%)</span>
+                  <span className="font-medium text-slate-900 dark:text-white tabular-nums">${tax.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500 dark:text-slate-400">Delivery Fee</span>
+                  <span className="font-medium text-slate-900 dark:text-white tabular-nums">${delivery.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div className="h-px bg-slate-100 dark:bg-white/10 w-full mb-4"></div>
+
               {/* Metric: Total Cost */}
-              <div className="flex justify-between items-end mb-2">
-                <span className="text-slate-500 dark:text-slate-400 font-medium">Estimated Total</span>
-                <span className="text-3xl font-bold text-slate-900 dark:text-white tabular-nums">$1,451.00</span>
+              <div className="flex justify-between items-end mb-6">
+                <span className="text-slate-700 dark:text-slate-300 font-bold">Total</span>
+                <span className="text-3xl font-extrabold text-primary tabular-nums">${total.toFixed(2)}</span>
               </div>
-              <div className="flex justify-end mb-6">
-                <span className="text-xs text-slate-400">Includes projected taxes & delivery fees</span>
-              </div>
-              
-              <div className="h-px bg-slate-100 dark:bg-white/10 w-full mb-6"></div>
               
               {/* Metric: Waste Reduction */}
               <div className="bg-leaf-green/10 rounded-lg p-4 mb-6 border border-leaf-green/20">
@@ -304,21 +252,26 @@ export default function ReviewOrder() {
               {/* Supplier Breakdown Mini-List */}
               <div className="space-y-3 mb-8">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sending Orders To:</p>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-700 dark:text-slate-300">Golden Wheat Co.</span>
-                  <span className="text-slate-400">2 Items</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-700 dark:text-slate-300">Local Farms Inc.</span>
-                  <span className="text-slate-400">3 Items</span>
-                </div>
+                {Object.entries(groupedOrders).map(([category, data]) => {
+                  const activeItems = data.items.filter(i => selectedIds.has(i.id)).length;
+                  if (activeItems === 0) return null;
+                  return (
+                    <div key={category} className="flex items-center justify-between text-sm">
+                      <span className="text-slate-700 dark:text-slate-300">{data.supplier}</span>
+                      <span className="text-slate-400 bg-slate-100 dark:bg-white/10 px-2 py-0.5 rounded-full text-xs font-medium">
+                        {activeItems} Item{activeItems > 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Primary Action Button */}
               <motion.button 
+                disabled={total === 0}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-primary hover:bg-primary-dark text-slate-900 font-bold py-4 px-6 rounded-lg shadow-md shadow-primary/30 transition-all flex items-center justify-center gap-2 group"
+                className="w-full bg-primary hover:bg-primary-dark text-slate-900 font-bold py-4 px-6 rounded-lg shadow-md shadow-primary/30 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Confirm & Send to Suppliers</span>
                 <span className="material-icons-round text-lg group-hover:translate-x-1 transition-transform">send</span>

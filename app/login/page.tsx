@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
   const router = useRouter();
+  // Şifre görünürlüğünü kontrol eden state eklendi
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,11 +98,17 @@ export default function Login() {
                 className="block w-full pl-10 pr-10 py-3 border-2 border-forest-green/30 rounded-xl bg-white/50 text-forest-green placeholder-forest-green/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent focus:bg-white transition-all duration-200" 
                 id="password" 
                 placeholder="••••••••" 
-                type="password"
+                type={showPassword ? "text" : "password"} // State'e bağlandı
                 required
               />
-              <button className="absolute inset-y-0 right-0 pr-3 flex items-center text-forest-green/50 hover:text-forest-green transition-colors" type="button">
-                <span className="material-icons text-xl">visibility</span>
+              <button 
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-forest-green/50 hover:text-forest-green transition-colors" 
+                type="button"
+                onClick={() => setShowPassword(!showPassword)} // Tıklama eventi eklendi
+              >
+                <span className="material-icons text-xl">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
               </button>
             </div>
           </div>
@@ -121,33 +130,11 @@ export default function Login() {
             <Link className="hover:text-forest-green transition-colors border-b border-transparent hover:border-forest-green" href="#">Contact Support</Link>
           </div>
         </form>
-
-        {/* Card Footer Decoration */}
-        <div className="bg-forest-green/5 py-4 px-10 flex justify-center gap-6 border-t border-forest-green/10">
-          <div className="flex flex-col items-center gap-1 group cursor-default" title="Inventory Status">
-            <div className="bg-white/40 p-2 rounded-full group-hover:bg-white/60 transition-colors">
-              <span className="material-icons text-forest-green/60 text-lg">inventory_2</span>
-            </div>
-            <span className="text-[10px] uppercase font-bold text-forest-green/40">Stock</span>
-          </div>
-          <div className="flex flex-col items-center gap-1 group cursor-default" title="Recent Orders">
-            <div className="bg-white/40 p-2 rounded-full group-hover:bg-white/60 transition-colors">
-              <span className="material-icons text-forest-green/60 text-lg">receipt_long</span>
-            </div>
-            <span className="text-[10px] uppercase font-bold text-forest-green/40">Orders</span>
-          </div>
-          <div className="flex flex-col items-center gap-1 group cursor-default" title="Sustainability Score">
-            <div className="bg-white/40 p-2 rounded-full group-hover:bg-white/60 transition-colors">
-              <span className="material-icons text-forest-green/60 text-lg">eco</span>
-            </div>
-            <span className="text-[10px] uppercase font-bold text-forest-green/40">Eco</span>
-          </div>
-        </div>
       </motion.main>
 
       {/* Page Footer */}
       <footer className="absolute bottom-6 w-full text-center z-10">
-        <p className="text-white/70 text-sm font-medium">© 2023 FreshFlow Systems. Sustainable Kitchen Management.</p>
+        <p className="text-white/70 text-sm font-medium">© {new Date().getFullYear()} FreshFlow Systems. Sustainable Kitchen Management.</p>
       </footer>
     </div>
   );
