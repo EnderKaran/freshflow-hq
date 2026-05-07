@@ -22,6 +22,14 @@
   --color-neutral-surface: #ffffff;
   --color-dark-surface: #2d1b1b;
   
+  --color-fresh-primary: #18ec9e;
+  --color-fresh-rose: #FFD5D5;
+  --color-fresh-forest: #3A6F43;
+  --color-fresh-leaf: #59AC77;
+  --color-fresh-salmon: #FDAAAA;
+  --color-fresh-bg-light: #f6f8f7;
+  --color-fresh-bg-dark: #10221b;
+
   --font-display: var(--font-space-grotesk), sans-serif;
   --font-jakarta: var(--font-plus-jakarta), sans-serif;
   --font-work: var(--font-work-sans), sans-serif;
