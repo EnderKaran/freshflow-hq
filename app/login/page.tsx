@@ -1,110 +1,107 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { loginAction } from "@/lib/actions/auth.actions";
 
 export default function Login() {
-  const router = useRouter();
-  // Şifre görünürlüğünü kontrol eden state eklendi
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/dashboard");
+    setIsLoading(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const result = await loginAction(formData);
+
+    if (result?.error) {
+      setError(result.error);
+      setIsLoading(false);
+    }
+    // Başarılıysa action içindeki redirect("/dashboard") otomatik çalışacak
   };
 
   return (
-    <div className="font-jakarta bg-leaf-green min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden w-full">
-      {/* Decorative Abstract Background Pattern */}
+    <div className="font-jakarta bg-leaf-green min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden w-full transition-colors duration-500">
+      {/* Arka Plan Desenleri */}
       <div 
         className="absolute inset-0 opacity-10 pointer-events-none" 
         style={{ backgroundImage: "radial-gradient(#ffffff 2px, transparent 2px)", backgroundSize: "40px 40px" }}
       ></div>
 
-      {/* Large decorative leaf accents (SVG) */}
-      <motion.div 
-        initial={{ opacity: 0, rotate: -30, x: -50, y: 50 }}
-        animate={{ opacity: 0.2, rotate: -12, x: 0, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="absolute -bottom-20 -left-20 text-white transform w-64 h-64 pointer-events-none"
-      >
-        <svg fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"></path>
-        </svg>
-      </motion.div>
-
-      <motion.div 
-        initial={{ opacity: 0, rotate: 20, x: 50, y: -50 }}
-        animate={{ opacity: 0.1, rotate: 45, x: 0, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-        className="absolute top-10 right-10 text-white transform w-48 h-48 pointer-events-none"
-      >
-        <svg fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"></path>
-        </svg>
-      </motion.div>
-
-      {/* Main Card */}
+      {/* Ana Kart */}
       <motion.main 
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, type: "spring", stiffness: 300, damping: 25 }}
         className="w-full max-w-md bg-pale-rose rounded-3xl shadow-2xl relative z-10 overflow-hidden"
       >
-        {/* Header Section */}
-        <div className="pt-12 pb-8 px-10 text-center">
-          <motion.div 
-            whileHover={{ rotate: 180 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center justify-center p-3 mb-4 bg-primary/20 rounded-2xl cursor-pointer"
-          >
+        <div className="pt-12 pb-6 px-10 text-center">
+          <div className="inline-flex items-center justify-center p-3 mb-4 bg-primary/20 rounded-2xl">
             <span className="material-icons text-forest-green text-3xl">restaurant</span>
-          </motion.div>
+          </div>
           <h1 className="text-3xl font-extrabold text-forest-green mb-1 tracking-tight">FreshFlow</h1>
           <p className="text-forest-green/80 font-medium text-lg">The Clean Counter</p>
         </div>
 
-        {/* Login Form */}
-        <form className="px-10 pb-12 space-y-6" onSubmit={handleLogin}>
-          {/* Manager ID Input */}
+        {/* Hata Mesajı Alanı */}
+        <AnimatePresence>
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="px-10 mb-4"
+            >
+              <div className="bg-red-100 border border-red-200 text-red-700 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
+                <span className="material-icons text-sm">error</span>
+                {error}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <form className="px-10 pb-12 space-y-6" onSubmit={handleSubmit}>
+          {/* Email / Manager ID */}
           <div className="space-y-2 group">
-            <label className="block text-sm font-bold text-forest-green uppercase tracking-wider" htmlFor="manager-id">Manager ID</label>
+            <label className="block text-sm font-bold text-forest-green uppercase tracking-wider" htmlFor="email">Manager ID / Email</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span className="material-icons text-forest-green/50 text-xl group-focus-within:text-forest-green transition-colors">badge</span>
               </div>
               <input 
-                className="block w-full pl-10 pr-3 py-3 border-2 border-forest-green/30 rounded-xl bg-white/50 text-forest-green placeholder-forest-green/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent focus:bg-white transition-all duration-200" 
-                id="manager-id" 
-                placeholder="Enter your ID" 
+                name="email"
+                className="block w-full pl-10 pr-3 py-3 border-2 border-forest-green/30 rounded-xl bg-white/50 text-forest-green placeholder-forest-green/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent focus:bg-white transition-all duration-200 font-medium" 
+                id="email" 
+                placeholder="ender@freshflow.com" 
                 type="text"
                 required
               />
             </div>
           </div>
 
-          {/* Password Input */}
+          {/* Password */}
           <div className="space-y-2 group">
-            <div className="flex justify-between items-center">
-              <label className="block text-sm font-bold text-forest-green uppercase tracking-wider" htmlFor="password">Password</label>
-            </div>
+            <label className="block text-sm font-bold text-forest-green uppercase tracking-wider" htmlFor="password">Password</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span className="material-icons text-forest-green/50 text-xl group-focus-within:text-forest-green transition-colors">lock</span>
               </div>
               <input 
-                className="block w-full pl-10 pr-10 py-3 border-2 border-forest-green/30 rounded-xl bg-white/50 text-forest-green placeholder-forest-green/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent focus:bg-white transition-all duration-200" 
+                name="password"
+                className="block w-full pl-10 pr-10 py-3 border-2 border-forest-green/30 rounded-xl bg-white/50 text-forest-green placeholder-forest-green/40 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent focus:bg-white transition-all duration-200 font-medium" 
                 id="password" 
                 placeholder="••••••••" 
-                type={showPassword ? "text" : "password"} // State'e bağlandı
+                type={showPassword ? "text" : "password"} 
                 required
               />
               <button 
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-forest-green/50 hover:text-forest-green transition-colors" 
                 type="button"
-                onClick={() => setShowPassword(!showPassword)} // Tıklama eventi eklendi
+                onClick={() => setShowPassword(!showPassword)}
               >
                 <span className="material-icons text-xl">
                   {showPassword ? "visibility_off" : "visibility"}
@@ -117,22 +114,27 @@ export default function Login() {
           <motion.button 
             whileHover={{ y: -2, scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full bg-primary hover:bg-[#ff9999] text-forest-green font-bold text-lg py-4 px-4 rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all duration-200 flex items-center justify-center gap-2 mt-4" 
+            disabled={isLoading}
+            className={`w-full bg-primary hover:bg-[#ff9999] text-forest-green font-bold text-lg py-4 px-4 rounded-xl shadow-lg shadow-primary/30 transition-all duration-200 flex items-center justify-center gap-2 mt-4 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`} 
             type="submit"
           >
-            <span>Open Kitchen</span>
-            <span className="material-icons text-xl">arrow_forward</span>
+            {isLoading ? (
+              <span className="material-icons animate-spin">sync</span>
+            ) : (
+              <>
+                <span>Open Kitchen</span>
+                <span className="material-icons text-xl">arrow_forward</span>
+              </>
+            )}
           </motion.button>
 
-          {/* Footer Links */}
           <div className="flex items-center justify-between pt-4 text-sm font-medium text-forest-green/70">
-            <Link className="hover:text-forest-green transition-colors border-b border-transparent hover:border-forest-green" href="#">Forgot Password?</Link>
-            <Link className="hover:text-forest-green transition-colors border-b border-transparent hover:border-forest-green" href="#">Contact Support</Link>
+            <Link className="hover:text-forest-green transition-colors" href="#">Forgot Password?</Link>
+            <Link className="hover:text-forest-green transition-colors" href="#">Contact Support</Link>
           </div>
         </form>
       </motion.main>
 
-      {/* Page Footer */}
       <footer className="absolute bottom-6 w-full text-center z-10">
         <p className="text-white/70 text-sm font-medium">© {new Date().getFullYear()} FreshFlow Systems. Sustainable Kitchen Management.</p>
       </footer>
