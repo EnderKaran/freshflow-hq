@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../prisma";
 
 /**
@@ -6,7 +7,7 @@ import { prisma } from "../prisma";
  */
 export async function createSaleTransaction(productId: string, quantitySold: number) {
   // Use a Prisma interactive transaction to ensure atomicity
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     // 1. Create the Sale record
     const sale = await tx.sale.create({
       data: {
