@@ -12,15 +12,22 @@
   --font-mono: var(--font-geist-mono);
   
   --color-primary: #fdaaaa;
-  --color-primary-dark: #e09595;
+  --color-primary-dark: #fca5a5;
   --color-forest-green: #3A6F43;
   --color-forest-green-dark: #2a5030;
   --color-leaf-green: #59AC77;
   --color-pale-rose: #FFD5D5;
   --color-background-light: #f8f5f5;
   --color-background-dark: #230f0f;
+  --color-neutral-surface: #ffffff;
+  --color-dark-surface: #2d1b1b;
+  
   --font-display: var(--font-space-grotesk), sans-serif;
   --font-jakarta: var(--font-plus-jakarta), sans-serif;
+  --font-work: var(--font-work-sans), sans-serif;
+
+  --shadow-soft: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+  --shadow-floating: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,4 +49,17 @@ body {
 
 @utility hero-pattern {
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233a6f43' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@utility liquid-fill {
+  background: linear-gradient(45deg, #59AC77 25%, #6bc78b 50%, #59AC77 75%);
+  background-size: 200% 200%;
 }

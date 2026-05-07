@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk, Plus_Jakarta_Sans, Work_Sans } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,6 +22,11 @@ const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
 });
 
+const workSans = Work_Sans({
+  variable: "--font-work-sans",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "FreshFlow - Smart Restaurant Supply Manager",
   description: "Efficiency meets Sustainability.",
@@ -35,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${plusJakarta.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${plusJakarta.variable} ${workSans.variable} h-full antialiased`}
     >
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round|Material+Icons" rel="stylesheet" />
