@@ -1,12 +1,9 @@
 import { prisma } from "../prisma";
 
-/**
- * Creates a sale and automatically deducts the corresponding inventory
- * based on the product's recipe. This guarantees atomic updates.
- */
+
 export async function createSaleTransaction(productId: string, quantitySold: number) {
   // Use a Prisma interactive transaction to ensure atomicity
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: { sale: { create: (arg0: { data: { productId: string; quantitySold: number; }; }) => any; }; recipe: { findMany: (arg0: { where: { productId: string; }; }) => any; }; inventory: { update: (arg0: { where: { id: any; }; data: { stockLevel: { decrement: number; }; }; }) => any; }; }) => {
     // 1. Create the Sale record
     const sale = await tx.sale.create({
       data: {
