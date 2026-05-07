@@ -14,10 +14,13 @@
   --color-primary: #fdaaaa;
   --color-primary-dark: #e09595;
   --color-forest-green: #3A6F43;
+  --color-forest-green-dark: #2a5030;
   --color-leaf-green: #59AC77;
+  --color-pale-rose: #FFD5D5;
   --color-background-light: #f8f5f5;
   --color-background-dark: #230f0f;
   --font-display: var(--font-space-grotesk), sans-serif;
+  --font-jakarta: var(--font-plus-jakarta), sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
