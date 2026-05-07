@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "node -r dotenv/config node_modules/.bin/tsx prisma/seed.ts"
