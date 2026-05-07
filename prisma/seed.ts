@@ -1,19 +1,21 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
-import { PrismaClient } from '@prisma/client/edge';
-import ws from 'ws';
+import { config } from 'dotenv';
+config();
 
-neonConfig.webSocketConstructor = ws;
+// Sadece standart Node.js client
+import { PrismaClient } from '@prisma/client';
 
-const connectionString = `${process.env.DATABASE_URL}`;
-const pool = new Pool({ connectionString });
-const adapter = new PrismaNeon(pool as any);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database...');
+  console.log('Seeding database started (v5.22.0)... 🚀');
 
-  // 1. Create Inventory items
+  // Temiz bir başlangıç için mevcut verileri sil
+  await prisma.recipe.deleteMany({});
+  await prisma.sale.deleteMany({});
+  await prisma.product.deleteMany({});
+  await prisma.inventory.deleteMany({});
+
+  // 1. Envanter Kalemleri
   const wagyu = await prisma.inventory.create({
     data: { name: 'Wagyu Beef', stockLevel: 15, safetyThreshold: 20, unit: 'kg' }
   });
@@ -36,7 +38,7 @@ async function main() {
     data: { name: 'Roma Tomatoes', stockLevel: 12, safetyThreshold: 20, unit: 'crates' }
   });
 
-  // 2. Create Products
+  // 2. Ürünler
   const wagyuBurger = await prisma.product.create({
     data: { name: 'Wagyu Burger' }
   });
@@ -44,20 +46,14 @@ async function main() {
     data: { name: 'Classic Burger' }
   });
 
-  // 3. Create Recipes (Mapping Products to Inventory)
-  // Wagyu Burger = 0.2kg Wagyu + 1 Bun + 0.1 head Lettuce + 0.01L Olive Oil
+  // 3. Reçeteler
   await prisma.recipe.createMany({
     data: [
       { productId: wagyuBurger.id, inventoryId: wagyu.id, quantity: 0.2 },
       { productId: wagyuBurger.id, inventoryId: buns.id, quantity: 1 },
       { productId: wagyuBurger.id, inventoryId: lettuce.id, quantity: 0.1 },
       { productId: wagyuBurger.id, inventoryId: oil.id, quantity: 0.01 },
-    ]
-  });
-
-  // Classic Burger = 0.25lbs Patties + 1 Bun + 0.1 head Lettuce + 0.02 crates Tomatoes
-  await prisma.recipe.createMany({
-    data: [
+      
       { productId: classicBurger.id, inventoryId: patties.id, quantity: 0.25 },
       { productId: classicBurger.id, inventoryId: buns.id, quantity: 1 },
       { productId: classicBurger.id, inventoryId: lettuce.id, quantity: 0.1 },
@@ -65,7 +61,7 @@ async function main() {
     ]
   });
 
-  console.log('Database seeded successfully.');
+  console.log('Database seeded successfully. 🎉');
 }
 
 main()

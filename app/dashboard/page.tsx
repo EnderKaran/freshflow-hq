@@ -22,7 +22,7 @@ export default function DashboardPage() {
         const result = await getInventoryItems();
         if (result.success && result.data) {
           // Gelen veriyi hem store'a hem de persist katmanına yazıyoruz
-          const formattedData = result.data.map(item => ({
+          const formattedData = result.data.map((item: { updatedAt: { toISOString: () => any; }; }) => ({
             ...item,
             // Ensure safetyThreshold exists, defaulting to 0 if missing from DB
             safetyThreshold: (item as any).safetyThreshold ?? 0,

@@ -1,9 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+   url      = env("DATABASE_URL")
 }
 
 model Inventory {
@@ -11,7 +12,7 @@ model Inventory {
   name            String
   stockLevel      Float
   safetyThreshold Float    @default(0)
-  unit            String   // e.g. "g", "pcs"
+  unit            String
   recipes         Recipe[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -19,7 +20,7 @@ model Inventory {
 
 model Product {
   id        String   @id @default(uuid())
-  name      String   // e.g. "Burger"
+  name      String
   recipes   Recipe[]
   sales     Sale[]
   createdAt DateTime @default(now())
@@ -32,7 +33,7 @@ model Recipe {
   productId   String
   ingredient  Inventory @relation(fields: [inventoryId], references: [id])
   inventoryId String
-  quantity    Float     // Quantity required per 1 unit of product
+  quantity    Float
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
