@@ -1,5 +1,6 @@
 "use client";
 
+import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { useInventoryStore, selectIsBelowThreshold, Ingredient } from "../store/inventoryStore";
 
@@ -7,7 +8,7 @@ interface IngredientCardProps {
   ingredient: Ingredient;
 }
 
-export function IngredientCard({ ingredient }: IngredientCardProps) {
+export const IngredientCard = memo(function IngredientCard({ ingredient }: IngredientCardProps) {
   // Use a custom selector directly with the store hook to ensure re-renders only when this specific ingredient changes
   const isBelowThreshold = useInventoryStore((state) => 
     selectIsBelowThreshold(state, ingredient.id)
@@ -59,4 +60,4 @@ export function IngredientCard({ ingredient }: IngredientCardProps) {
       </div>
     </motion.div>
   );
-}
+});
