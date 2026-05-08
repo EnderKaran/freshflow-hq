@@ -65,6 +65,12 @@ export default function DashboardPage() {
     });
   }, [ingredients, searchQuery, activeTab]);
 
+  // ⚡ Bolt: Memoized lowStockCount to avoid redundant O(N) array filtering calculations
+  // on every render, especially when unrelated state changes.
+  const lowStockCount = useMemo(() => {
+    return ingredients.filter(i => i.stockLevel <= i.safetyThreshold).length;
+  }, [ingredients]);
+
   if (!_hasHydrated || isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background-light dark:bg-background-dark">
@@ -156,7 +162,7 @@ export default function DashboardPage() {
              <div className="bg-white dark:bg-dark-surface p-6 rounded-[28px] border border-slate-100 dark:border-white/5 w-40">
                 <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">Stock Alerts</p>
                 <p className="text-2xl font-black text-rose-500">
-                  {ingredients.filter(i => i.stockLevel <= i.safetyThreshold).length}
+                  {lowStockCount}
                 </p>
              </div>
           </div>
@@ -177,7 +183,7 @@ export default function DashboardPage() {
               >
                 {tab} 
                 <span className="ml-2 opacity-40">
-                  {tab === "All Items" ? ingredients.length : ingredients.filter(i => i.stockLevel <= i.safetyThreshold).length}
+                  {tab === "All Items" ? ingredients.length : lowStockCount}
                 </span>
               </button>
             ))}

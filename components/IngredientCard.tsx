@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 import { useInventoryStore, selectIsBelowThreshold, Ingredient } from "../store/inventoryStore";
 
@@ -7,7 +8,9 @@ interface IngredientCardProps {
   ingredient: Ingredient;
 }
 
-export function IngredientCard({ ingredient }: IngredientCardProps) {
+// ⚡ Bolt: Added React.memo() to prevent unnecessary re-renders of the expensive
+// Framer Motion list items when the parent component updates unrelated state (like search query).
+export const IngredientCard = React.memo(function IngredientCard({ ingredient }: IngredientCardProps) {
   // Use a custom selector directly with the store hook to ensure re-renders only when this specific ingredient changes
   const isBelowThreshold = useInventoryStore((state) => 
     selectIsBelowThreshold(state, ingredient.id)
@@ -59,4 +62,4 @@ export function IngredientCard({ ingredient }: IngredientCardProps) {
       </div>
     </motion.div>
   );
-}
+});
