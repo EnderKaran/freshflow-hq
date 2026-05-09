@@ -46,11 +46,12 @@ export default function ReviewOrder() {
   const handleConfirmOrder = async () => {
     setIsSubmitting(true);
     try {
-      // Bu kısım normalde bir Batch Order action'ı olmalı 
-      // Şimdilik döngü ile test ediyoruz
-      for (const id of Array.from(selectedIds)) {
-        await processSaleAction(id, 1);
-      }
+      // ⚡ Bolt Optimization:
+      // Replaced sequential for...of loop with Promise.all to batch API calls concurrently,
+      // significantly reducing total execution time.
+      const ids = Array.from(selectedIds);
+      await Promise.all(ids.map(id => processSaleAction(id, 1)));
+
       alert("Order successfully sent to suppliers! 🚀");
     } catch (err) {
       alert("An error occurred.");
