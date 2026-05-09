@@ -57,8 +57,13 @@ export default function DashboardPage() {
 
   // 3. Filtreleme Mantığı
   const filteredIngredients = useMemo(() => {
+    // ⚡ Bolt Optimization:
+    // Hoisted searchQuery.toLowerCase() outside the filter loop
+    // to prevent redundant string computations on every iteration.
+    const lowerQuery = searchQuery.toLowerCase();
+
     return ingredients.filter((item) => {
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = item.name.toLowerCase().includes(lowerQuery);
       let matchesTab = true;
       if (activeTab === "Low Stock") matchesTab = item.stockLevel <= item.safetyThreshold;
       return matchesSearch && matchesTab;

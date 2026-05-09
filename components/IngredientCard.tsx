@@ -1,17 +1,20 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
-import { useInventoryStore, selectIsBelowThreshold, Ingredient } from "../store/inventoryStore";
+import { Ingredient } from "../store/inventoryStore";
 
 interface IngredientCardProps {
   ingredient: Ingredient;
 }
 
-export function IngredientCard({ ingredient }: IngredientCardProps) {
-  // Use a custom selector directly with the store hook to ensure re-renders only when this specific ingredient changes
-  const isBelowThreshold = useInventoryStore((state) => 
-    selectIsBelowThreshold(state, ingredient.id)
-  );
+// ⚡ Bolt Optimization:
+// Removed Zustand store connection inside the list component.
+// Using Array.find in a selector for N items creates an O(N^2) bottleneck
+// on every store update. We calculate isBelowThreshold from props directly.
+// Wrapped in React.memo to prevent unnecessary re-renders.
+export const IngredientCard = React.memo(function IngredientCard({ ingredient }: IngredientCardProps) {
+  const isBelowThreshold = ingredient.stockLevel <= ingredient.safetyThreshold;
 
   return (
     <motion.div 
@@ -59,4 +62,4 @@ export function IngredientCard({ ingredient }: IngredientCardProps) {
       </div>
     </motion.div>
   );
-}
+});
