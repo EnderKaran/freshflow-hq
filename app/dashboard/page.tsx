@@ -57,13 +57,26 @@ export default function DashboardPage() {
 
   // 3. Filtreleme Mantığı
   const filteredIngredients = useMemo(() => {
+    // ⚡ Bolt Optimization: Compute lowercase string once before loop
+    const lowerQuery = searchQuery.toLowerCase();
     return ingredients.filter((item) => {
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = item.name.toLowerCase().includes(lowerQuery);
       let matchesTab = true;
       if (activeTab === "Low Stock") matchesTab = item.stockLevel <= item.safetyThreshold;
       return matchesSearch && matchesTab;
     });
   }, [ingredients, searchQuery, activeTab]);
+
+  // ⚡ Bolt Optimization: Calculate low stock count once instead of filtering the array multiple times inline
+  const lowStockCount = useMemo(() => {
+    let count = 0;
+    for (let i = 0; i < ingredients.length; i++) {
+      if (ingredients[i].stockLevel <= ingredients[i].safetyThreshold) {
+        count++;
+      }
+    }
+    return count;
+  }, [ingredients]);
 
   if (!_hasHydrated || isLoading) {
     return (
@@ -156,7 +169,7 @@ export default function DashboardPage() {
              <div className="bg-white dark:bg-dark-surface p-6 rounded-[28px] border border-slate-100 dark:border-white/5 w-40">
                 <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">Stock Alerts</p>
                 <p className="text-2xl font-black text-rose-500">
-                  {ingredients.filter(i => i.stockLevel <= i.safetyThreshold).length}
+                  {lowStockCount}
                 </p>
              </div>
           </div>
@@ -177,7 +190,7 @@ export default function DashboardPage() {
               >
                 {tab} 
                 <span className="ml-2 opacity-40">
-                  {tab === "All Items" ? ingredients.length : ingredients.filter(i => i.stockLevel <= i.safetyThreshold).length}
+                  {tab === "All Items" ? ingredients.length : lowStockCount}
                 </span>
               </button>
             ))}
