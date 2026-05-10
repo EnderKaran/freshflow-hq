@@ -1,0 +1,3 @@
+## 2024-05-10 - [React Render Loop Optimizations]
+**Learning:** Calculating values like `toLowerCase()` inside tight loops (like `filter` or `map`) and making redundant inline array `.filter().length` calls for counting are anti-patterns that create unnecessary memory allocations and CPU overhead in React renders.
+**Action:** Always pre-compute loop-invariant strings before `.filter` operations, and use counting loops or `reduce` inside a `useMemo` when calculating lengths instead of throwing away dynamically allocated arrays from `.filter()`.
