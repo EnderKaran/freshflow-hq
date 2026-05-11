@@ -57,8 +57,9 @@ export default function DashboardPage() {
 
   // 3. Filtreleme Mantığı
   const filteredIngredients = useMemo(() => {
+    const lowerSearchQuery = searchQuery.toLowerCase();
     return ingredients.filter((item) => {
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = item.name.toLowerCase().includes(lowerSearchQuery);
       let matchesTab = true;
       if (activeTab === "Low Stock") matchesTab = item.stockLevel <= item.safetyThreshold;
       return matchesSearch && matchesTab;
