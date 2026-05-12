@@ -102,8 +102,10 @@ export default function Login() {
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-forest-green/50 hover:text-forest-green transition-colors" 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
               >
-                <span className="material-icons text-xl">
+                <span className="material-icons text-xl" aria-hidden="true">
                   {showPassword ? "visibility_off" : "visibility"}
                 </span>
               </button>
