@@ -42,11 +42,3 @@ export const useInventoryStore = create<InventoryState>()(
     }
   )
 );
-
-// Selector to check if an ingredient is below safety threshold
-export const selectIsBelowThreshold = (state: InventoryState, id: string) => {
-  const ingredient = state.ingredients.find((ing) => ing.id === id);
-  if (!ingredient) return false;
-  // Güvenlik sınırının altına düştüğünde veya eşitlendiğinde uyar
-  return ingredient.stockLevel <= ingredient.safetyThreshold;
-};
