@@ -3,3 +3,7 @@
 ## 2026-05-11 - Zustand Selector Bottleneck in List Components
 **Learning:** Using an O(N) array search inside a Zustand selector (`selectIsBelowThreshold`) for each item in a rendered list created an O(N²) bottleneck. Whenever the store updated, ALL list items re-evaluated the selector, unnecessarily iterating through the entire inventory array on the main thread.
 **Action:** When a parent component already passes the full item object to a child as a prop, avoid using a global store selector to find it again. Compute derived state (`isBelowThreshold = stockLevel <= safetyThreshold`) locally in O(1) time within the child component instead.
+
+## 2026-05-12 - N+1 Network Requests in Server Actions
+**Learning:** Next.js Server Actions are essentially HTTP POST requests under the hood. When calling a Server Action inside a loop (e.g., `for` loop iterating over selected items), it triggers a separate network request for each iteration, causing an N+1 bottleneck and severe UI lagging.
+**Action:** Always batch related Server Action calls into a single request by creating a "bulk" or "batch" action on the backend that accepts an array of data. Process them concurrently (e.g., `Promise.all`) on the server to optimize network roundtrips and improve responsiveness.

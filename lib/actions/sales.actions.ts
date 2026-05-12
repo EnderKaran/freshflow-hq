@@ -34,3 +34,35 @@ export async function processSaleAction(productId: string, quantitySold: number)
     };
   }
 }
+
+/**
+ * ⚡ Bolt Optimization: Batch Processing
+ * Processes multiple sales in a single server action to prevent N+1 network requests
+ * from the frontend.
+ */
+export async function processBatchSaleAction(items: { productId: string; quantity: number }[]) {
+  try {
+    // Process all transactions concurrently
+    const sales = await Promise.all(
+      items.map(item => createSaleTransaction(item.productId, item.quantity))
+    );
+
+    // Revalidate once after all transactions are complete
+    revalidatePath("/dashboard");
+    revalidatePath("/review-order");
+    revalidatePath("/predictions");
+
+    return {
+      success: true,
+      data: sales,
+      message: `${sales.length} satış başarıyla işlendi.`
+    };
+  } catch (error: any) {
+    console.error("Toplu Satış Action Hatası:", error.message);
+
+    return {
+      success: false,
+      error: error.message || "Toplu işlem sırasında hata oluştu."
+    };
+  }
+}
