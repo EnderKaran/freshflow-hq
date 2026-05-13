@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useState, useMemo, useEffect } from "react";
-import { processSaleAction } from "@/lib/actions/sales.actions";
+import { processSaleAction, processBatchSaleAction } from "@/lib/actions/sales.actions";
 import { getInventoryItems } from "@/lib/actions/inventory.actions";
 
 export default function ReviewOrder() {
@@ -46,11 +46,9 @@ export default function ReviewOrder() {
   const handleConfirmOrder = async () => {
     setIsSubmitting(true);
     try {
-      // Bu kısım normalde bir Batch Order action'ı olmalı 
-      // Şimdilik döngü ile test ediyoruz
-      for (const id of Array.from(selectedIds)) {
-        await processSaleAction(id, 1);
-      }
+      // ⚡ Bolt Optimization: Send all orders in a single HTTP request instead of N+1 requests
+      const items = Array.from(selectedIds).map(id => ({ productId: id, quantity: 1 }));
+      await processBatchSaleAction(items);
       alert("Order successfully sent to suppliers! 🚀");
     } catch (err) {
       alert("An error occurred.");
