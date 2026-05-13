@@ -7,3 +7,7 @@
 ## 2026-05-12 - N+1 Network Requests in Server Actions
 **Learning:** Next.js Server Actions are essentially HTTP POST requests under the hood. When calling a Server Action inside a loop (e.g., `for` loop iterating over selected items), it triggers a separate network request for each iteration, causing an N+1 bottleneck and severe UI lagging.
 **Action:** Always batch related Server Action calls into a single request by creating a "bulk" or "batch" action on the backend that accepts an array of data. Process them concurrently (e.g., `Promise.all`) on the server to optimize network roundtrips and improve responsiveness.
+
+## 2024-05-20 - Concurrent Prisma Transactions
+**Learning:** Sequential `await` calls inside Prisma transaction loops (e.g., `for...of`) introduce severe N+1 database roundtrips.
+**Action:** Always batch array operations using `Promise.all(array.map(...))` to send them concurrently within the transaction context.

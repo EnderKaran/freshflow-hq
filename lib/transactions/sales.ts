@@ -33,23 +33,21 @@ export async function createSaleTransaction(productId: string, quantitySold: num
     }
 
     // 3. Reçeteye göre her bir malzemenin stoğunu güncelle
-    for (const recipe of recipes) {
-      // Formül: (Satılan Adet * Reçete Miktarı)
-      const totalDeduction = quantitySold * recipe.quantity;
-
-      // İsteğe bağlı: Burada mevcut stok kontrolü yapıp stok yetersizse hata fırlatabilirsin.
-      // Ancak genellikle restoran sistemlerinde satışın durmaması için eksiye düşmesine izin verilir 
-      // ve "Low Stock" uyarısıyla müdahale edilir. biz direkt düşüyoruz:
-      
-      await (tx as any).inventory.update({
-        where: { id: recipe.inventoryId },
-        data: {
-          stockLevel: {
-            decrement: totalDeduction,
+    // ⚡ Bolt Optimization: Executing inventory updates concurrently instead of sequentially
+    // to prevent N+1 database request delays during transactions.
+    await Promise.all(
+      recipes.map((recipe: { inventoryId: string; quantity: number; }) => {
+        const totalDeduction = quantitySold * recipe.quantity;
+        return (tx as any).inventory.update({
+          where: { id: recipe.inventoryId },
+          data: {
+            stockLevel: {
+              decrement: totalDeduction,
+            },
           },
-        },
-      });
-    }
+        });
+      })
+    );
 
     return sale;
   });
