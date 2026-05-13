@@ -223,11 +223,12 @@ export default function DashboardPage() {
       {/* Floating UI Elements */}
       <div className="fixed bottom-10 right-10 z-50">
         <motion.button 
+          aria-label="Add new item"
           whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.9 }}
-          className="w-14 h-14 bg-forest-green text-white rounded-2xl shadow-2xl flex items-center justify-center"
+          className="w-14 h-14 bg-forest-green text-white rounded-2xl shadow-2xl flex items-center justify-center focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50 transition-shadow"
         >
-          <span className="material-icons text-2xl font-bold text-primary">add</span>
+          <span aria-hidden="true" className="material-icons text-2xl font-bold text-primary">add</span>
         </motion.button>
       </div>
 
