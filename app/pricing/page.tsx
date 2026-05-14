@@ -95,7 +95,10 @@ export default function PricingPage() {
             <span className={`text-sm font-bold ${!isAnnual ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>Monthly</span>
             <button 
               onClick={() => setIsAnnual(!isAnnual)}
-              className="w-14 h-8 bg-slate-200 dark:bg-slate-800 rounded-full p-1 relative transition-colors"
+              className="w-14 h-8 bg-slate-200 dark:bg-slate-800 rounded-full p-1 relative transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+              role="switch"
+              aria-checked={isAnnual}
+              aria-label="Toggle annual billing"
             >
               <motion.div 
                 animate={{ x: isAnnual ? 24 : 0 }}
