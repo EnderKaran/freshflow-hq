@@ -12,7 +12,7 @@ export async function createSaleTransaction(productId: string, quantitySold: num
   return await prisma.$transaction(async (tx) => {
     
     // 1. Satış kaydını oluştur
-    const sale = await (tx as any).sale.create({
+    const sale = await tx.sale.create({
       data: {
         productId,
         quantitySold,
@@ -20,7 +20,7 @@ export async function createSaleTransaction(productId: string, quantitySold: num
     });
 
     // 2. Ürüne ait reçete bilgilerini (malzemeleri) getir
-    const recipes = await (tx as any).recipe.findMany({
+    const recipes = await tx.recipe.findMany({
       where: { productId },
       include: {
         ingredient: true // Malzeme detaylarını da kontrol etmek gerekebilir
@@ -38,7 +38,7 @@ export async function createSaleTransaction(productId: string, quantitySold: num
     await Promise.all(
       recipes.map((recipe: { inventoryId: string; quantity: number; }) => {
         const totalDeduction = quantitySold * recipe.quantity;
-        return (tx as any).inventory.update({
+        return tx.inventory.update({
           where: { id: recipe.inventoryId },
           data: {
             stockLevel: {
@@ -50,5 +50,55 @@ export async function createSaleTransaction(productId: string, quantitySold: num
     );
 
     return sale;
+  });
+}
+
+/**
+ * Birden fazla satışı tek bir Prisma transaction'ı (tek bir DB bağlantısı) içinde işler.
+ * ⚡ Bolt Optimization: Prevents Serverless DB connection pool exhaustion
+ * by avoiding Promise.all() mapping over separate prisma.$transaction calls.
+ */
+export async function createBatchSaleTransaction(items: { productId: string; quantity: number }[]) {
+  return await prisma.$transaction(async (tx) => {
+    return await Promise.all(
+      items.map(async (item) => {
+        // 1. Satış kaydını oluştur
+        const sale = await tx.sale.create({
+          data: {
+            productId: item.productId,
+            quantitySold: item.quantity,
+          },
+        });
+
+        // 2. Ürüne ait reçete bilgilerini getir
+        const recipes = await tx.recipe.findMany({
+          where: { productId: item.productId },
+          include: {
+            ingredient: true
+          }
+        });
+
+        if (recipes.length === 0) {
+          throw new Error(`Kritik Hata: ${item.productId} ID'li ürünün reçetesi bulunamadı.`);
+        }
+
+        // 3. Stok güncellemelerini eşzamanlı olarak gönder
+        await Promise.all(
+          recipes.map((recipe: { inventoryId: string; quantity: number; }) => {
+            const totalDeduction = item.quantity * recipe.quantity;
+            return tx.inventory.update({
+              where: { id: recipe.inventoryId },
+              data: {
+                stockLevel: {
+                  decrement: totalDeduction,
+                },
+              },
+            });
+          })
+        );
+
+        return sale;
+      })
+    );
   });
 }
