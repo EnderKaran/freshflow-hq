@@ -11,3 +11,7 @@
 ## 2024-05-20 - Concurrent Prisma Transactions
 **Learning:** Sequential `await` calls inside Prisma transaction loops (e.g., `for...of`) introduce severe N+1 database roundtrips.
 **Action:** Always batch array operations using `Promise.all(array.map(...))` to send them concurrently within the transaction context.
+
+## 2026-05-13 - Prisma Serverless DB Connection Pooling
+**Learning:** In a Serverless Postgres architecture (like Neon), sending a large array of database queries directly to `Promise.all(updates)` forces Prisma to attempt opening a separate DB connection for each query simultaneously. This can quickly exhaust the connection pool and result in significant network overhead, degrading performance on bulk updates.
+**Action:** When executing multiple independent database update/create operations, use `await prisma.$transaction(updates)` instead of `Promise.all()`. This bundles all operations into a single network request and reuses a single transaction connection, preventing pool exhaustion and vastly reducing latency.
