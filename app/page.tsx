@@ -49,10 +49,12 @@ export default function LandingPage() {
             <div className="md:hidden flex items-center">
               <button 
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-forest-green dark:text-white hover:text-leaf-green focus:outline-none p-2" 
+                className="text-forest-green dark:text-white hover:text-leaf-green focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg p-2"
                 type="button"
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isMobileMenuOpen}
               >
-                <span className="material-icons-round text-3xl">
+                <span className="material-icons-round text-3xl" aria-hidden="true">
                   {isMobileMenuOpen ? "close" : "menu"}
                 </span>
               </button>
