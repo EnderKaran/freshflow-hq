@@ -1,6 +1,6 @@
 "use server";
 
-import { createSaleTransaction } from "../transactions/sales";
+import { createSaleTransaction, createBatchSaleTransaction } from "../transactions/sales";
 import { revalidatePath } from "next/cache";
 
 /**
@@ -42,10 +42,9 @@ export async function processSaleAction(productId: string, quantitySold: number)
  */
 export async function processBatchSaleAction(items: { productId: string; quantity: number }[]) {
   try {
-    // Process all transactions concurrently
-    const sales = await Promise.all(
-      items.map(item => createSaleTransaction(item.productId, item.quantity))
-    );
+    // ⚡ Bolt Optimization: Use a single transaction connection for the batch
+    // to prevent Serverless Postgres connection pool exhaustion.
+    const sales = await createBatchSaleTransaction(items);
 
     // Revalidate once after all transactions are complete
     revalidatePath("/dashboard");
