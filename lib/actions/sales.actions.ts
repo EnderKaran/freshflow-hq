@@ -1,7 +1,8 @@
 "use server";
 
-import { createSaleTransaction } from "../transactions/sales";
+import { createSaleTransaction, executeSaleWithinTx } from "../transactions/sales";
 import { revalidatePath } from "next/cache";
+import { prisma } from "../prisma";
 
 /**
  * Frontend üzerinden bir satış işlemini tetikleyen Server Action.
@@ -37,15 +38,20 @@ export async function processSaleAction(productId: string, quantitySold: number)
 
 /**
  * ⚡ Bolt Optimization: Batch Processing
- * Processes multiple sales in a single server action to prevent N+1 network requests
- * from the frontend.
+ * Processes multiple sales in a single database transaction to prevent connection pool exhaustion
+ * and N+1 network requests from the frontend.
  */
 export async function processBatchSaleAction(items: { productId: string; quantity: number }[]) {
   try {
-    // Process all transactions concurrently
-    const sales = await Promise.all(
-      items.map(item => createSaleTransaction(item.productId, item.quantity))
-    );
+    // Process all operations within a single interactive database transaction
+    // This avoids exhausting the Serverless connection pool with Promise.all over independent transactions
+    // ⚡ Bolt Optimization: Utilizing Promise.all *inside* the transaction to ensure the batch executes
+    // concurrently and prevents N+1 network latency, while still sharing the single DB connection.
+    const sales = await prisma.$transaction(async (tx) => {
+      return await Promise.all(
+        items.map(item => executeSaleWithinTx(tx, item.productId, item.quantity))
+      );
+    });
 
     // Revalidate once after all transactions are complete
     revalidatePath("/dashboard");
