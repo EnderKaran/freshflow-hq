@@ -18,3 +18,7 @@
 ## 2024-05-17 - Prevent Serverless DB Connection Pool Exhaustion in Prisma Transactions
 **Learning:** In a Serverless Postgres architecture (like Neon), sending a large array of independent Prisma transactions (`createSaleTransaction`) to `Promise.all()` opens multiple independent database connections simultaneously. This causes severe network latency and quickly exhausts the DB connection pool when batch processing operations like sales.
 **Action:** Always batch multiple interactive database operations into a single sequential `prisma.$transaction(async (tx) => { ... })` instead of using `Promise.all()` over multiple independent transactions. Pass the transaction client (`tx`) down to helper functions to reuse the single connection for the entire batch.
+
+## 2026-05-14 - Prisma Unused Relations Bottleneck
+**Learning:** Over-fetching relations in Prisma (e.g., using `include: { relation: true }` "just in case") when the returned relational data is never consumed causes wasteful SQL JOINs. In Serverless Postgres architectures, this unnecessarily increases database memory overhead and network payload size, degrading transaction performance.
+**Action:** Always verify if included relations are actually mapped or accessed in the code. If only scalar foreign keys are needed, remove the `include` statement to prevent unnecessary database JOINs and reduce payload size.
