@@ -4,3 +4,6 @@
 ## 2024-05-14 - Accessible Framer Motion Icon Buttons
 **Learning:** Icon-only interactive elements using framer-motion (e.g., `<motion.button>`) require explicit `aria-label`s for screen readers. The inner icon element itself (like `<span className="material-icons">add</span>`) needs `aria-hidden="true"` to prevent redundant or confusing announcements, and focus rings (`focus-visible:ring-...`) must be maintained so keyboard users have a visible focus indicator without relying strictly on mouse hover animations.
 **Action:** When implementing icon-only buttons using framer-motion, always provide `aria-label`, hide the inner decorative icon with `aria-hidden="true"`, and include `focus:outline-none focus-visible:ring` tailwind utility classes.
+## 2024-05-16 - Accessible Table Inputs
+**Learning:** Form inputs embedded directly within data tables (like checkboxes and quantity inputs) often lack explicit visual `<label>` elements due to space constraints and table header context. This leaves screen reader users without context for what the input modifies.
+**Action:** Always provide dynamically generated `aria-label` attributes to form inputs within tables (e.g., `aria-label={"Quantity for " + item.name}`) to provide essential context for assistive technologies.

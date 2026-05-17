@@ -134,6 +134,7 @@ export default function ReviewOrder() {
                         <td className="px-6 py-5">
                           <input 
                             type="checkbox" 
+                            aria-label={`Select ${item.name} for order`}
                             checked={selectedIds.has(item.id)}
                             onChange={() => {
                               const next = new Set(selectedIds);
@@ -158,11 +159,12 @@ export default function ReviewOrder() {
                           <div className="relative flex items-center group/ai">
                             <input 
                               type="number" 
+                              aria-label={`Quantity for ${item.name}`}
                               value={quantities[item.id]}
                               onChange={(e) => setQuantities({...quantities, [item.id]: parseInt(e.target.value) || 0})}
                               className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-1.5 font-bold focus:ring-2 focus:ring-primary/50 text-sm"
                             />
-                            <span className="material-icons-round absolute right-2 text-primary/40 text-xs cursor-help group-hover/ai:text-primary">psychology</span>
+                            <span aria-hidden="true" className="material-icons-round absolute right-2 text-primary/40 text-xs cursor-help group-hover/ai:text-primary">psychology</span>
                           </div>
                         </td>
                         <td className="px-6 py-5 text-right font-medium text-slate-500">$5.50</td>
