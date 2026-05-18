@@ -35,8 +35,13 @@ export default function Predictions() {
               <h1 className="text-xl font-bold tracking-tight">FreshFlow</h1>
             </div>
             {/* Mobile Close Button */}
-            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden text-fresh-forest/60 hover:text-fresh-forest">
-              <span className="material-icons-round">close</span>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="md:hidden text-fresh-forest/60 hover:text-fresh-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest rounded-lg p-1"
+              aria-label="Close menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              <span className="material-icons-round" aria-hidden="true">close</span>
             </button>
           </div>
           
@@ -83,8 +88,13 @@ export default function Predictions() {
               <div className="w-8 h-8 rounded-lg bg-fresh-primary flex items-center justify-center text-fresh-forest font-bold">F</div>
               <h1 className="text-lg font-bold">FreshFlow</h1>
             </div>
-            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 text-fresh-forest hover:bg-white/50 rounded-lg transition-colors">
-              <span className="material-icons-round">menu</span>
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2 text-fresh-forest hover:bg-white/50 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest"
+              aria-label="Open menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              <span className="material-icons-round" aria-hidden="true">menu</span>
             </button>
           </header>
 
