@@ -20,9 +20,11 @@ export default function ReviewOrder() {
       if (result.success && result.data) {
         setItems(result.data);
         setSelectedIds(new Set(result.data.map((i: any) => i.id)));
-        const qtys = result.data.reduce((acc: any, item: any) => ({
-          ...acc, [item.id]: Math.ceil(item.safetyThreshold * 1.4)
-        }), {});
+        // ⚡ Bolt Optimization: Using Object.fromEntries to build dictionary in O(N) instead of
+        // using object spread (...acc) inside reduce which creates an O(N²) memory/CPU bottleneck.
+        const qtys = Object.fromEntries(
+          result.data.map((item: any) => [item.id, Math.ceil(item.safetyThreshold * 1.4)])
+        );
         setQuantities(qtys);
       }
       setIsLoading(false);
@@ -31,17 +33,21 @@ export default function ReviewOrder() {
   }, []);
 
   const { subtotal, tax, delivery, total } = useMemo(() => {
-    const currentSubtotal = items.reduce((sum, item) => {
-      const price = 5.50; // Gerçek DB'de unitPrice varsa onu kullan
-      return selectedIds.has(item.id) ? sum + (quantities[item.id] || 0) * price : sum;
-    }, 0);
+    // ⚡ Bolt Optimization: Calculate subtotal by iterating only over selectedIds (O(K))
+    // instead of the entire items array (O(N)), avoiding unnecessary calculations for unselected items.
+    const price = 5.50; // Gerçek DB'de unitPrice varsa onu kullan
+    let currentSubtotal = 0;
+    selectedIds.forEach((id) => {
+      currentSubtotal += (quantities[id] || 0) * price;
+    });
+
     return {
       subtotal: currentSubtotal,
       tax: currentSubtotal * 0.08,
       delivery: currentSubtotal > 0 ? 45.00 : 0,
       total: currentSubtotal * 1.08 + (currentSubtotal > 0 ? 45.00 : 0)
     };
-  }, [items, quantities, selectedIds]);
+  }, [quantities, selectedIds]);
 
   const handleConfirmOrder = async () => {
     setIsSubmitting(true);

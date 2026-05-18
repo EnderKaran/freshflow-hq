@@ -22,3 +22,11 @@
 ## 2026-05-14 - Prisma Unused Relations Bottleneck
 **Learning:** Over-fetching relations in Prisma (e.g., using `include: { relation: true }` "just in case") when the returned relational data is never consumed causes wasteful SQL JOINs. In Serverless Postgres architectures, this unnecessarily increases database memory overhead and network payload size, degrading transaction performance.
 **Action:** Always verify if included relations are actually mapped or accessed in the code. If only scalar foreign keys are needed, remove the `include` statement to prevent unnecessary database JOINs and reduce payload size.
+
+## 2026-05-15 - React State Initialization Bottleneck (O(N²))
+**Learning:** Using `Array.reduce` with the object spread operator (`...acc`) to build a state dictionary from an array inside a `useEffect` loop creates an O(N²) memory and CPU bottleneck. On each iteration, the entire accumulator object is cloned, which becomes increasingly expensive for large datasets.
+**Action:** When initializing large dictionary objects in React state from arrays, always use `Object.fromEntries(array.map(...))` to construct the object in O(N) time instead of using `reduce` with the object spread operator.
+
+## 2026-05-16 - Subtotal Calculation Efficiency (O(N) vs O(K))
+**Learning:** Calculating a subtotal by filtering or checking every element in a full `items` array against a Set (`selectedIds.has(item.id)`) forces an O(N) operation on every state change.
+**Action:** When calculating derived state (like subtotals) that only depends on selected items, iterate directly over the subset (`selectedIds`) rather than the full list. This reduces the time complexity from O(N) to O(K) and improves rendering performance for large lists.
