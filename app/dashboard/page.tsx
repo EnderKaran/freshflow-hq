@@ -141,10 +141,12 @@ export default function DashboardPage() {
             <button 
               onClick={handleOptimize}
               disabled={isOptimizing}
-              className="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-2xl text-xs font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2"
+              className="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-2xl text-xs font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2 focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isOptimizing ? "Optimizing..." : "Optimize Prices"}
-              <span className="material-icons-round text-sm">bolt</span>
+              <span aria-hidden="true" className={`material-icons-round text-sm ${isOptimizing ? "animate-spin" : ""}`}>
+                {isOptimizing ? "sync" : "bolt"}
+              </span>
             </button>
           </motion.div>
 
