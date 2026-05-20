@@ -230,10 +230,12 @@ export default function ReviewOrder() {
                 disabled={isSubmitting || selectedIds.size === 0}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-[#FDAAAA] hover:bg-[#F89696] text-[#632828] font-black py-5 rounded-2xl shadow-lg shadow-[#FDAAAA]/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                className="w-full bg-[#FDAAAA] hover:bg-[#F89696] text-[#632828] font-black py-5 rounded-2xl shadow-lg shadow-[#FDAAAA]/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-4 focus-visible:ring-[#FDAAAA]/50"
               >
                 {isSubmitting ? "Processing..." : "Confirm & Send to Suppliers"}
-                <span className="material-icons-round text-xl">send</span>
+                <span aria-hidden="true" className={`material-icons-round text-xl ${isSubmitting ? "animate-spin" : ""}`}>
+                  {isSubmitting ? "sync" : "send"}
+                </span>
               </motion.button>
               
               <p className="text-center text-[10px] font-bold text-slate-400 mt-6 uppercase tracking-widest">
