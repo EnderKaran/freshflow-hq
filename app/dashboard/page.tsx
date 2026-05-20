@@ -57,14 +57,28 @@ export default function DashboardPage() {
 
   // 3. Filtreleme Mantığı
   const filteredIngredients = useMemo(() => {
-    const lowerSearchQuery = searchQuery.toLowerCase();
+    // ⚡ Bolt Optimization: Early returns and bypassing expensive operations
+    // We avoid toLowerCase() when searchQuery is empty and check activeTab criteria first
+    // to bypass the string search completely for items that don't match the tab.
+    const lowerSearchQuery = searchQuery ? searchQuery.toLowerCase() : "";
     return ingredients.filter((item) => {
-      const matchesSearch = item.name.toLowerCase().includes(lowerSearchQuery);
       let matchesTab = true;
       if (activeTab === "Low Stock") matchesTab = item.stockLevel <= item.safetyThreshold;
-      return matchesSearch && matchesTab;
+
+      if (!matchesTab) return false; // Early return
+
+      if (!lowerSearchQuery) return true; // Bypass expensive string op
+
+      return item.name.toLowerCase().includes(lowerSearchQuery);
     });
   }, [ingredients, searchQuery, activeTab]);
+
+  // ⚡ Bolt Optimization: Extract inline O(N) array manipulations
+  // Instead of using array.filter(...).length directly in render (which creates redundant intermediate array allocations),
+  // calculate it once in useMemo using reduce.
+  const lowStockCount = useMemo(() => {
+    return ingredients.reduce((count, item) => count + (item.stockLevel <= item.safetyThreshold ? 1 : 0), 0);
+  }, [ingredients]);
 
   if (!_hasHydrated || isLoading) {
     return (
@@ -159,7 +173,7 @@ export default function DashboardPage() {
              <div className="bg-white dark:bg-dark-surface p-6 rounded-[28px] border border-slate-100 dark:border-white/5 w-40">
                 <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">Stock Alerts</p>
                 <p className="text-2xl font-black text-rose-500">
-                  {ingredients.filter(i => i.stockLevel <= i.safetyThreshold).length}
+                  {lowStockCount}
                 </p>
              </div>
           </div>
@@ -180,7 +194,7 @@ export default function DashboardPage() {
               >
                 {tab} 
                 <span className="ml-2 opacity-40">
-                  {tab === "All Items" ? ingredients.length : ingredients.filter(i => i.stockLevel <= i.safetyThreshold).length}
+                  {tab === "All Items" ? ingredients.length : lowStockCount}
                 </span>
               </button>
             ))}

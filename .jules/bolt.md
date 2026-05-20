@@ -30,3 +30,7 @@
 ## 2026-05-16 - Subtotal Calculation Efficiency (O(N) vs O(K))
 **Learning:** Calculating a subtotal by filtering or checking every element in a full `items` array against a Set (`selectedIds.has(item.id)`) forces an O(N) operation on every state change.
 **Action:** When calculating derived state (like subtotals) that only depends on selected items, iterate directly over the subset (`selectedIds`) rather than the full list. This reduces the time complexity from O(N) to O(K) and improves rendering performance for large lists.
+
+## 2026-05-17 - React Render Bottleneck: Inline O(N) Array Manipulations
+**Learning:** Using `array.filter(...).length` directly inside a React component's return block forces redundant intermediate array allocations on every render cycle. Additionally, performing string operations like `toLowerCase().includes()` inside filtering loops without checking simpler early-return conditions first wastes CPU cycles.
+**Action:** Extract inline O(N) array manipulations to `useMemo` hooks using `.reduce()` (or simple loops) to avoid allocating intermediate arrays. When filtering lists, always use early returns for empty search queries or simpler condition failures (like active tabs) before falling back to expensive string operations.
