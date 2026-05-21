@@ -103,11 +103,12 @@ export default function DashboardPage() {
             </div>
           )}
           
-          <div className="hidden md:flex items-center bg-white dark:bg-dark-surface px-4 py-2 rounded-full shadow-sm border border-gray-100 dark:border-white/5">
-            <span className="material-icons text-gray-400 text-xl mr-2">search</span>
+          <div className="hidden md:flex items-center bg-white dark:bg-dark-surface px-4 py-2 rounded-full shadow-sm border border-gray-100 dark:border-white/5 focus-within:ring-2 focus-within:ring-primary/50 transition-shadow">
+            <span aria-hidden="true" className="material-icons text-gray-400 text-xl mr-2">search</span>
             <input 
               className="bg-transparent border-none focus:outline-none focus:ring-0 text-sm w-48" 
               placeholder="Search kitchen rail..." 
+              aria-label="Search kitchen rail"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
