@@ -30,3 +30,9 @@
 ## 2026-05-16 - Subtotal Calculation Efficiency (O(N) vs O(K))
 **Learning:** Calculating a subtotal by filtering or checking every element in a full `items` array against a Set (`selectedIds.has(item.id)`) forces an O(N) operation on every state change.
 **Action:** When calculating derived state (like subtotals) that only depends on selected items, iterate directly over the subset (`selectedIds`) rather than the full list. This reduces the time complexity from O(N) to O(K) and improves rendering performance for large lists.
+## 2026-05-21 - Optimize Render Loop Array Allocation and Filter
+**Learning:** Calling `ingredients.filter(...).length` directly within the component's render function (even inside template literals) triggers a full O(N) array allocation on every single re-render, creating unnecessary garbage collection pressure and CPU overhead.
+**Action:** When you only need the count of items that match a condition, always extract the calculation into a `useMemo` and use  to count the items without instantiating an intermediate array. Additionally, optimize filter operations with early returns to bypass expensive operations like string manipulation when the item fails an earlier condition.
+## 2024-05-23 - Optimize Render Loop Array Allocation and Filter
+**Learning:** Calling `ingredients.filter(...).length` directly within the component's render function triggers a full O(N) array allocation on every single re-render, creating unnecessary garbage collection pressure and CPU overhead.
+**Action:** When you only need the count of items that match a condition, always extract the calculation into a `useMemo` and use `.reduce()` to count the items without instantiating an intermediate array. Additionally, optimize filter operations with early returns to bypass expensive operations like string manipulation when the item fails an earlier condition.
