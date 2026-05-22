@@ -30,3 +30,11 @@
 ## 2026-05-16 - Subtotal Calculation Efficiency (O(N) vs O(K))
 **Learning:** Calculating a subtotal by filtering or checking every element in a full `items` array against a Set (`selectedIds.has(item.id)`) forces an O(N) operation on every state change.
 **Action:** When calculating derived state (like subtotals) that only depends on selected items, iterate directly over the subset (`selectedIds`) rather than the full list. This reduces the time complexity from O(N) to O(K) and improves rendering performance for large lists.
+
+## 2026-05-18 - React Array Allocation Bottleneck inside Render
+**Learning:** Performing inline O(N) array operations like `array.filter(condition).length` directly inside a React component's return statement forces the creation of intermediate array objects on every single render. This triggers frequent garbage collection cycles, especially when typing in a search bar.
+**Action:** Extract list counts into a `useMemo` and use `array.reduce((count, item) => condition ? count + 1 : count, 0)` to count items in O(N) time without allocating any intermediate arrays.
+
+## 2026-05-18 - Early Returns in Filter Callbacks
+**Learning:** Running expensive string operations (like `item.name.toLowerCase()`) unconditionally inside an `array.filter()` callback creates a CPU bottleneck, even for items that would fail other simple boolean checks or when the search query is empty.
+**Action:** Always add early returns in filter callbacks. If the search query is empty (`!searchQuery`), return `true` immediately to skip string allocations. If an item fails a simple condition (like active tab mismatch), return `false` before performing string searches.
