@@ -38,3 +38,7 @@
 ## 2026-05-18 - Early Returns in Filter Callbacks
 **Learning:** Running expensive string operations (like `item.name.toLowerCase()`) unconditionally inside an `array.filter()` callback creates a CPU bottleneck, even for items that would fail other simple boolean checks or when the search query is empty.
 **Action:** Always add early returns in filter callbacks. If the search query is empty (`!searchQuery`), return `true` immediately to skip string allocations. If an item fails a simple condition (like active tab mismatch), return `false` before performing string searches.
+
+## 2024-05-25 - React Form List Optimization with React.memo
+**Learning:** In a list where each item has an individual interactive state (like a quantity input or a checkbox), having the parent component track the entire state (e.g., using a single `quantities` dictionary) causes O(N) re-renders across all items whenever a single item changes. This results in noticeable typing lag.
+**Action:** Extract the individual list item into a separate `React.memo`-wrapped component (e.g., `OrderItemRow`). Pass stable callbacks (`useCallback`) from the parent so that updating one item's quantity only triggers a re-render for that specific row, changing performance from O(N) to O(1) per keystroke.
