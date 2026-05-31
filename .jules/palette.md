@@ -11,3 +11,6 @@
 ## 2024-05-19 - Accessible Custom Input Containers
 **Learning:** When styling inputs with custom wrapper elements (e.g., using `focus:outline-none` on the `<input>` and styling the parent `<div>`), the wrapper will not naturally show focus when the input is active, causing keyboard users to lose track of their position. Additionally, search inputs inside such wrappers without adjacent visual `<label>`s provide no context to screen reader users.
 **Action:** When building custom input containers, always add `focus-within:ring` classes to the parent container to restore visual focus states. Provide an explicit `aria-label` to the input element if a visual label is not present, and hide decorative icons using `aria-hidden="true"`.
+## 2024-06-25 - Custom Tablist Accessibility and Layout Shift
+**Learning:** Custom tablists require explicit ARIA roles (`role="tablist"`, `role="tab"`), state tracking (`aria-selected`), and transparent borders on inactive tabs to prevent layout shift (jank) when borders are applied to active tabs.
+**Action:** When implementing custom tabs, always ensure `role`, `aria-selected`, and keyboard focus styles are added, and use `border-transparent` for inactive states to maintain consistent layout sizing.
