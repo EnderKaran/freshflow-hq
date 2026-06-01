@@ -38,3 +38,7 @@
 ## 2026-05-18 - Early Returns in Filter Callbacks
 **Learning:** Running expensive string operations (like `item.name.toLowerCase()`) unconditionally inside an `array.filter()` callback creates a CPU bottleneck, even for items that would fail other simple boolean checks or when the search query is empty.
 **Action:** Always add early returns in filter callbacks. If the search query is empty (`!searchQuery`), return `true` immediately to skip string allocations. If an item fails a simple condition (like active tab mismatch), return `false` before performing string searches.
+
+## 2026-06-01 - React Component O(N) Re-render Optimization
+**Learning:** In a list where items have individual local state (like selection or quantities) managed by the parent, using inline `onChange` handlers inside `items.map` creates an O(N) re-render bottleneck. Every state update causes the entire list to re-render because inline functions are recreated on every parent render.
+**Action:** Extract the list item into its own component wrapped in `React.memo`, and pass down stable callback functions created with `useCallback` from the parent to prevent unchanged rows from re-rendering.
