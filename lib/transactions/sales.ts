@@ -21,8 +21,14 @@ export async function executeSaleWithinTx(tx: any, productId: string, quantitySo
 
   // 2. Ürüne ait reçete bilgilerini (malzemeleri) getir
   // ⚡ Bolt Optimization: Removed unused relation include to prevent unnecessary database JOINs and reduce payload size.
+  // ⚡ Bolt Optimization: Added explicit select to prevent over-fetching unused fields (like createdAt/updatedAt)
+  // Reduces Serverless DB egress payload and memory overhead.
   const recipes = await tx.recipe.findMany({
-    where: { productId }
+    where: { productId },
+    select: {
+      inventoryId: true,
+      quantity: true
+    }
   });
 
   // Eğer ürünün reçetesi yoksa işlemi durdur (Hatalı veri girişi önlemi)

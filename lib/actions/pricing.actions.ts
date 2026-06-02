@@ -9,9 +9,17 @@ export async function optimizeMenuPricing(city: string = "Bursa") {
   try {
     // ⚡ Bolt Optimization: Parallelize independent data fetching to reduce total latency.
     // 1 & 2. Güncel Hava Durumunu Al ve Tüm Ürünleri Getir (Eşzamanlı)
+    // ⚡ Bolt Optimization: Added explicit select to prevent over-fetching unused fields
+    // Reduces Serverless DB egress payload and memory overhead.
     const [weather, products] = await Promise.all([
       getAdjustedSalesForecast(100, city),
-      prisma.product.findMany()
+      prisma.product.findMany({
+        select: {
+          id: true,
+          basePrice: true,
+          category: true
+        }
+      })
     ]);
     const isRainy = weather.isRainy;
     // Not: Hava durumu servisine sıcaklık verisini de ekleyebilirsin (data.main.temp)
