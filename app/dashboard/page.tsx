@@ -180,15 +180,21 @@ export default function DashboardPage() {
 
         <div className="mb-4">
           <h2 className="text-4xl font-black text-forest-green dark:text-white tracking-tighter mb-4">My Pantry</h2>
-          <div className="flex gap-6 text-xs font-bold uppercase tracking-widest">
+          <div
+            className="flex gap-6 text-xs font-bold uppercase tracking-widest"
+            role="tablist"
+            aria-label="Pantry filters"
+          >
             {["All Items", "Low Stock"].map((tab) => (
               <button 
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-2 transition-all ${
+                role="tab"
+                aria-selected={activeTab === tab}
+                className={`pb-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 rounded-sm ${
                   activeTab === tab 
                     ? "text-primary border-b-2 border-primary" 
-                    : "text-gray-400 hover:text-forest-green"
+                    : "text-gray-400 hover:text-forest-green border-b-2 border-transparent"
                 }`}
               >
                 {tab} 
