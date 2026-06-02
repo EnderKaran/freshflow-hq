@@ -2,11 +2,70 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback, memo } from "react";
 import { processSaleAction, processBatchSaleAction } from "@/lib/actions/sales.actions";
 import { getInventoryItems } from "@/lib/actions/inventory.actions";
 
+
+// ⚡ Bolt Optimization: Extracted inline <tr> into a memoized OrderRow component
+// This prevents an O(N) re-render bottleneck across the entire table when a single item updates.
+const OrderRow = memo(function OrderRow({
+  item,
+  isSelected,
+  quantity,
+  onToggle,
+  onQuantityChange
+}: {
+  item: any;
+  isSelected: boolean;
+  quantity: number;
+  onToggle: (id: string) => void;
+  onQuantityChange: (id: string, value: number) => void;
+}) {
+  return (
+    <tr className={`group transition-all ${isSelected ? 'bg-white dark:bg-transparent' : 'opacity-40 grayscale-[0.5] bg-slate-50/50'}`}>
+      <td className="px-6 py-5">
+        <input
+          type="checkbox"
+          aria-label={`Select ${item.name} for order`}
+          checked={isSelected}
+          onChange={() => onToggle(item.id)}
+          className="w-5 h-5 rounded-md border-slate-300 dark:border-slate-700 text-primary focus:ring-primary cursor-pointer"
+        />
+      </td>
+      <td className="px-6 py-5">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+             <span className="material-icons-round">inventory_2</span>
+          </div>
+          <div>
+            <p className="font-bold text-slate-900 dark:text-white">{item.name}</p>
+            <p className="text-xs text-slate-400">{item.unit} • Stock: {item.stockLevel}</p>
+          </div>
+        </div>
+      </td>
+      <td className="px-6 py-5">
+        <div className="relative flex items-center group/ai">
+          <input
+            type="number"
+            aria-label={`Quantity for ${item.name}`}
+            value={quantity}
+            onChange={(e) => onQuantityChange(item.id, parseInt(e.target.value) || 0)}
+            className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-1.5 font-bold focus:ring-2 focus:ring-primary/50 text-sm"
+          />
+          <span aria-hidden="true" className="material-icons-round absolute right-2 text-primary/40 text-xs cursor-help group-hover/ai:text-primary">psychology</span>
+        </div>
+      </td>
+      <td className="px-6 py-5 text-right font-medium text-slate-500">$5.50</td>
+      <td className="px-6 py-5 text-right font-bold text-slate-900 dark:text-white">
+        ${((quantity || 0) * 5.50).toFixed(2)}
+      </td>
+    </tr>
+  );
+});
+
 export default function ReviewOrder() {
+
   const [items, setItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,6 +107,20 @@ export default function ReviewOrder() {
       total: currentSubtotal * 1.08 + (currentSubtotal > 0 ? 45.00 : 0)
     };
   }, [quantities, selectedIds]);
+
+  // ⚡ Bolt Optimization: Using useCallback to pass stable references to memoized children
+  // This prevents the entire list from re-rendering when a single row's state changes.
+  const handleToggle = useCallback((id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }, []);
+
+  const handleQuantityChange = useCallback((id: string, value: number) => {
+    setQuantities(prev => ({...prev, [id]: value}));
+  }, []);
 
   const handleConfirmOrder = async () => {
     setIsSubmitting(true);
@@ -136,48 +209,14 @@ export default function ReviewOrder() {
                   </thead>
                   <tbody className="divide-y divide-slate-50 dark:divide-white/5 text-sm">
                     {items.map((item) => (
-                      <tr key={item.id} className={`group transition-all ${selectedIds.has(item.id) ? 'bg-white dark:bg-transparent' : 'opacity-40 grayscale-[0.5] bg-slate-50/50'}`}>
-                        <td className="px-6 py-5">
-                          <input 
-                            type="checkbox" 
-                            aria-label={`Select ${item.name} for order`}
-                            checked={selectedIds.has(item.id)}
-                            onChange={() => {
-                              const next = new Set(selectedIds);
-                              next.has(item.id) ? next.delete(item.id) : next.add(item.id);
-                              setSelectedIds(next);
-                            }}
-                            className="w-5 h-5 rounded-md border-slate-300 dark:border-slate-700 text-primary focus:ring-primary cursor-pointer"
-                          />
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
-                               <span className="material-icons-round">inventory_2</span>
-                            </div>
-                            <div>
-                              <p className="font-bold text-slate-900 dark:text-white">{item.name}</p>
-                              <p className="text-xs text-slate-400">{item.unit} • Stock: {item.stockLevel}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="relative flex items-center group/ai">
-                            <input 
-                              type="number" 
-                              aria-label={`Quantity for ${item.name}`}
-                              value={quantities[item.id]}
-                              onChange={(e) => setQuantities({...quantities, [item.id]: parseInt(e.target.value) || 0})}
-                              className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-1.5 font-bold focus:ring-2 focus:ring-primary/50 text-sm"
-                            />
-                            <span aria-hidden="true" className="material-icons-round absolute right-2 text-primary/40 text-xs cursor-help group-hover/ai:text-primary">psychology</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5 text-right font-medium text-slate-500">$5.50</td>
-                        <td className="px-6 py-5 text-right font-bold text-slate-900 dark:text-white">
-                          ${((quantities[item.id] || 0) * 5.50).toFixed(2)}
-                        </td>
-                      </tr>
+                      <OrderRow
+                        key={item.id}
+                        item={item}
+                        isSelected={selectedIds.has(item.id)}
+                        quantity={quantities[item.id] || 0}
+                        onToggle={handleToggle}
+                        onQuantityChange={handleQuantityChange}
+                      />
                     ))}
                   </tbody>
                 </table>
