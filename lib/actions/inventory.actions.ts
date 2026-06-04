@@ -7,6 +7,15 @@ import { revalidatePath } from "next/cache";
 export async function getInventoryItems() {
   try {
     const items = await prisma.inventory.findMany({
+      // ⚡ Bolt Optimization: Added select clause to only fetch fields required by the frontend
+      // (id, name, stockLevel, safetyThreshold, unit). Prevents overfetching createdAt, updatedAt, etc.
+      select: {
+        id: true,
+        name: true,
+        stockLevel: true,
+        safetyThreshold: true,
+        unit: true,
+      },
       orderBy: { name: 'asc' }
     });
     
