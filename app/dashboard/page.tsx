@@ -191,10 +191,10 @@ export default function DashboardPage() {
                 role="tab"
                 aria-selected={activeTab === tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm ${
+                className={`pb-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm border-b-2 ${
                   activeTab === tab 
-                    ? "text-primary border-b-2 border-primary" 
-                    : "text-gray-400 hover:text-forest-green"
+                    ? "text-primary border-primary"
+                    : "text-gray-400 border-transparent hover:text-forest-green"
                 }`}
               >
                 {tab} 
