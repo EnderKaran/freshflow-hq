@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2025-06-08 - Added accessible Timeframe selector tablist
+**Learning:** Static toggle buttons functioning as a pseudo-tablist missing `role="tablist"` wrapper and keyboard focus limits navigability for keyboard and screen reader users. It violates the pattern for "Accessible Custom Tablists".
+**Action:** When implementing timeframe or category selectors that act like tabs, wrap them in a container with `role="tablist"` and `aria-label`, assign `role="tab"` to the child buttons, use `aria-selected` to communicate their active state, and apply `focus:outline-none focus-visible:ring-*` to ensure a visible keyboard focus indicator.
