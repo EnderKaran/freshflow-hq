@@ -11,7 +11,15 @@ export async function optimizeMenuPricing(city: string = "Bursa") {
     // 1 & 2. Güncel Hava Durumunu Al ve Tüm Ürünleri Getir (Eşzamanlı)
     const [weather, products] = await Promise.all([
       getAdjustedSalesForecast(100, city),
-      prisma.product.findMany()
+      // ⚡ Bolt Optimization: Added explicit select clause to avoid default over-fetching
+      // of unconsumed fields (createdAt, updatedAt, name, currentPrice) from the DB.
+      prisma.product.findMany({
+        select: {
+          id: true,
+          basePrice: true,
+          category: true
+        }
+      })
     ]);
     const isRainy = weather.isRainy;
     // Not: Hava durumu servisine sıcaklık verisini de ekleyebilirsin (data.main.temp)
