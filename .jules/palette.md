@@ -14,3 +14,7 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+
+## 2024-06-09 - Accessible Sidebar Navigation UX
+**Learning:** For sidebar navigation links, ensuring the wrapper `<nav>` has a descriptive `aria-label`, applying `aria-current="page"` to the active link, explicitly adding keyboard focus styling (e.g., `focus:outline-none focus-visible:ring-*`), and hiding inner decorative icons with `aria-hidden="true"` creates a significantly more accessible and navigable experience without altering visual design.
+**Action:** Always verify that `<nav>` components and their child `<Link>` elements contain these critical ARIA attributes and focus-visible classes, especially when using icon-based navigation.
