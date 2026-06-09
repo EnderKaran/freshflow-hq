@@ -6,8 +6,17 @@ import { revalidatePath } from "next/cache";
 // Tüm envanteri getiren fonksiyon (Zustand'ı beslemek için)
 export async function getInventoryItems() {
   try {
+    // ⚡ Bolt Optimization: Use select to prevent default over-fetching of unneeded fields
+    // (like createdAt/updatedAt), minimizing payload size and JSON serialization overhead.
     const items = await prisma.inventory.findMany({
-      orderBy: { name: 'asc' }
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        stockLevel: true,
+        safetyThreshold: true,
+        unit: true
+      }
     });
     
     return { success: true, data: items };
