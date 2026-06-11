@@ -117,15 +117,15 @@ export default function Login() {
             whileHover={{ y: -2, scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             disabled={isLoading}
-            className={`w-full bg-primary hover:bg-[#ff9999] text-forest-green font-bold text-lg py-4 px-4 rounded-xl shadow-lg shadow-primary/30 transition-all duration-200 flex items-center justify-center gap-2 mt-4 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`} 
+            className={`w-full bg-primary hover:bg-[#ff9999] text-forest-green font-bold text-lg py-4 px-4 rounded-xl shadow-lg shadow-primary/30 transition-all duration-200 flex items-center justify-center gap-2 mt-4 focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
             type="submit"
           >
             {isLoading ? (
-              <span className="material-icons animate-spin">sync</span>
+              <span aria-hidden="true" className="material-icons animate-spin">sync</span>
             ) : (
               <>
                 <span>Open Kitchen</span>
-                <span className="material-icons text-xl">arrow_forward</span>
+                <span aria-hidden="true" className="material-icons text-xl">arrow_forward</span>
               </>
             )}
           </motion.button>
