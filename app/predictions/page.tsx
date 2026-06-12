@@ -8,6 +8,7 @@ import { SalesChart } from "@/components/SalesChart";
 export default function Predictions() {
   // Mobil menü için state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeTimeRange, setActiveTimeRange] = useState("Week");
 
   return (
     <div className="bg-fresh-rose text-fresh-forest font-display min-h-screen selection:bg-fresh-salmon selection:text-fresh-forest">
@@ -197,14 +198,14 @@ export default function Predictions() {
                     <motion.button 
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 px-6 bg-fresh-primary hover:bg-fresh-primary/90 text-fresh-forest font-bold rounded-xl shadow-lg shadow-fresh-primary/20 transition-all flex items-center justify-center gap-2"
+                      className="w-full py-4 px-6 bg-fresh-primary hover:bg-fresh-primary/90 text-fresh-forest font-bold rounded-xl shadow-lg shadow-fresh-primary/20 transition-all flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest focus-visible:ring-offset-2"
                     >
                       <span className="material-icons-round">check</span>
                       Approve Change
                     </motion.button>
                     <motion.button 
                       whileHover={{ backgroundColor: "rgba(58, 111, 67, 0.05)" }}
-                      className="w-full py-3 px-6 bg-transparent border-2 border-fresh-forest/10 text-fresh-forest font-semibold rounded-xl transition-colors"
+                      className="w-full py-3 px-6 bg-transparent border-2 border-fresh-forest/10 text-fresh-forest font-semibold rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest focus-visible:ring-offset-2"
                     >
                       Adjust Manually
                     </motion.button>
@@ -259,10 +260,22 @@ export default function Predictions() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
-                    <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest">Week</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Month</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Quarter</button>
+                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg" role="tablist" aria-label="Chart time range">
+                    {["Week", "Month", "Quarter"].map((tab) => (
+                      <button
+                        key={tab}
+                        role="tab"
+                        aria-selected={activeTimeRange === tab}
+                        onClick={() => setActiveTimeRange(tab)}
+                        className={`px-3 py-1.5 rounded-md text-xs transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest ${
+                          activeTimeRange === tab
+                            ? "bg-white shadow-sm font-bold text-fresh-forest"
+                            : "hover:bg-white/50 font-medium text-fresh-forest/60"
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
