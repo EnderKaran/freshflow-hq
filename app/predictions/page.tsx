@@ -197,9 +197,9 @@ export default function Predictions() {
                     <motion.button 
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 px-6 bg-fresh-primary hover:bg-fresh-primary/90 text-fresh-forest font-bold rounded-xl shadow-lg shadow-fresh-primary/20 transition-all flex items-center justify-center gap-2"
+                      className="w-full py-4 px-6 bg-fresh-primary hover:bg-fresh-primary/90 text-fresh-forest font-bold rounded-xl shadow-lg shadow-fresh-primary/20 transition-all flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-4 focus-visible:ring-fresh-primary/50"
                     >
-                      <span className="material-icons-round">check</span>
+                      <span className="material-icons-round" aria-hidden="true">check</span>
                       Approve Change
                     </motion.button>
                     <motion.button 
@@ -219,7 +219,7 @@ export default function Predictions() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="material-icons-round text-fresh-leaf">history</span>
-                    <span>Correlated with last month's Tuesday sales</span>
+                    <span>Correlated with last month&apos;s Tuesday sales</span>
                   </div>
                 </div>
               </div>
