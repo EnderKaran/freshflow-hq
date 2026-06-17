@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useDeferredValue } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getInventoryItems } from "@/lib/actions/inventory.actions";
 import { getAdjustedSalesForecast } from "@/lib/transactions/weatherService";
@@ -15,6 +15,11 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // ⚡ Bolt Optimization: Use deferred value to prevent main thread blocking during high-frequency search input.
+  // This allows the input to update immediately while pushing the expensive filtering/rendering to the background.
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+
   const [activeTab, setActiveTab] = useState("All Items");
   const [weatherData, setWeatherData] = useState<any>(null);
 
@@ -59,14 +64,15 @@ export default function DashboardPage() {
   const filteredIngredients = useMemo(() => {
     // ⚡ Bolt Optimization: Added early returns to avoid expensive string allocations
     // (toLowerCase) and includes checks on unselected tabs or empty queries.
-    const lowerSearchQuery = searchQuery.toLowerCase();
+    // We use deferredSearchQuery here to avoid O(N) filtering operations blocking the UI thread.
+    const lowerSearchQuery = deferredSearchQuery.toLowerCase();
     return ingredients.filter((item) => {
       if (activeTab === "Low Stock" && item.stockLevel > item.safetyThreshold) return false;
       if (!lowerSearchQuery) return true;
 
       return item.name.toLowerCase().includes(lowerSearchQuery);
     });
-  }, [ingredients, searchQuery, activeTab]);
+  }, [ingredients, deferredSearchQuery, activeTab]);
 
   // ⚡ Bolt Optimization: Memoize O(N) derived state and avoid array allocations.
   // We use reduce instead of filter(...).length to count the items without allocating
