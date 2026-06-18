@@ -349,9 +349,9 @@ export default function LandingPage() {
                 Helping restaurants build sustainable, profitable futures through smart inventory management.
               </p>
               <div className="flex space-x-4 pt-2">
-                <Link className="text-white/60 hover:text-primary transition-colors" href="#"><span className="material-icons-round">facebook</span></Link>
-                <Link className="text-white/60 hover:text-primary transition-colors" href="#"><span className="material-icons-round">thumb_up_alt</span></Link>
-                <Link className="text-white/60 hover:text-primary transition-colors" href="#"><span className="material-icons-round">camera_alt</span></Link>
+                <Link aria-label="Facebook" className="text-white/60 hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded" href="#"><span className="material-icons-round" aria-hidden="true">facebook</span></Link>
+                <Link aria-label="Like us" className="text-white/60 hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded" href="#"><span className="material-icons-round" aria-hidden="true">thumb_up_alt</span></Link>
+                <Link aria-label="Instagram" className="text-white/60 hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded" href="#"><span className="material-icons-round" aria-hidden="true">camera_alt</span></Link>
               </div>
             </div>
             <div>
