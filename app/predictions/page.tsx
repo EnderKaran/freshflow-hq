@@ -197,14 +197,14 @@ export default function Predictions() {
                     <motion.button 
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 px-6 bg-fresh-primary hover:bg-fresh-primary/90 text-fresh-forest font-bold rounded-xl shadow-lg shadow-fresh-primary/20 transition-all flex items-center justify-center gap-2"
+                      className="w-full py-4 px-6 bg-fresh-primary hover:bg-fresh-primary/90 text-fresh-forest font-bold rounded-xl shadow-lg shadow-fresh-primary/20 transition-all flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-4 focus-visible:ring-fresh-primary/50"
                     >
-                      <span className="material-icons-round">check</span>
+                      <span className="material-icons-round" aria-hidden="true">check</span>
                       Approve Change
                     </motion.button>
                     <motion.button 
                       whileHover={{ backgroundColor: "rgba(58, 111, 67, 0.05)" }}
-                      className="w-full py-3 px-6 bg-transparent border-2 border-fresh-forest/10 text-fresh-forest font-semibold rounded-xl transition-colors"
+                      className="w-full py-3 px-6 bg-transparent border-2 border-fresh-forest/10 text-fresh-forest font-semibold rounded-xl transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-fresh-forest/20"
                     >
                       Adjust Manually
                     </motion.button>
@@ -259,10 +259,10 @@ export default function Predictions() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
-                    <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest">Week</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Month</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Quarter</button>
+                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg" role="tablist" aria-label="Timeframe">
+                    <button role="tab" aria-selected="true" className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest/50">Week</button>
+                    <button role="tab" aria-selected="false" className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest/50">Month</button>
+                    <button role="tab" aria-selected="false" className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest/50">Quarter</button>
                   </div>
                 </div>
               </div>
