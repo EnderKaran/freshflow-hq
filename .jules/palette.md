@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-05-21 - Preventing Layout Shifts in Active/Inactive Elements
+**Learning:** When using borders to indicate active states (like `border-b-2` on active tabs), removing the border completely from the inactive state causes the element to shrink by the border width, leading to noticeable layout shifts (jank) during interaction.
+**Action:** Always maintain the structural dimensions of interactive elements across states. For borders, apply a transparent border of the same width (e.g., `border-b-2 border-transparent`) to the inactive state to reserve the space without visual impact.
