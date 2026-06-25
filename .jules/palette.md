@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-06-25 - Accessible Sidebar Navigation Links
+**Learning:** When creating sidebar navigation menus with icon elements and links, screen readers may announce the ligature text (e.g., "dashboard") instead of recognizing it as a decoration, and keyboard navigation might not present a clear visual indicator. In addition, screen readers need to know which navigation link represents the active page.
+**Action:** For sidebar navigation links: 1. Ensure the wrapper `<nav>` has a descriptive `aria-label`. 2. Apply `aria-current="page"` to the currently active link. 3. Hide inner decorative icons with `aria-hidden="true"`. 4. Maintain visible keyboard focus (e.g., `focus:outline-none focus-visible:ring-2 focus-visible:ring-... focus-visible:ring-offset-2`).
