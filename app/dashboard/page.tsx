@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useDeferredValue } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getInventoryItems } from "@/lib/actions/inventory.actions";
 import { getAdjustedSalesForecast } from "@/lib/transactions/weatherService";
@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearchQuery = useDeferredValue(searchQuery);
   const [activeTab, setActiveTab] = useState("All Items");
   const [weatherData, setWeatherData] = useState<any>(null);
 
@@ -59,14 +60,16 @@ export default function DashboardPage() {
   const filteredIngredients = useMemo(() => {
     // ⚡ Bolt Optimization: Added early returns to avoid expensive string allocations
     // (toLowerCase) and includes checks on unselected tabs or empty queries.
-    const lowerSearchQuery = searchQuery.toLowerCase();
+    // ⚡ Bolt Optimization: Utilizing useDeferredValue to avoid blocking the main thread
+    // synchronously during high-frequency text input in the search bar.
+    const lowerSearchQuery = deferredSearchQuery.toLowerCase();
     return ingredients.filter((item) => {
       if (activeTab === "Low Stock" && item.stockLevel > item.safetyThreshold) return false;
       if (!lowerSearchQuery) return true;
 
       return item.name.toLowerCase().includes(lowerSearchQuery);
     });
-  }, [ingredients, searchQuery, activeTab]);
+  }, [ingredients, deferredSearchQuery, activeTab]);
 
   // ⚡ Bolt Optimization: Memoize O(N) derived state and avoid array allocations.
   // We use reduce instead of filter(...).length to count the items without allocating
@@ -226,7 +229,7 @@ export default function DashboardPage() {
               ))}
             </AnimatePresence>
 
-            {!searchQuery && activeTab === "All Items" && (
+            {!deferredSearchQuery && activeTab === "All Items" && (
               <motion.div 
                 whileHover={{ scale: 1.02 }}
                 className="snap-center w-[310px] h-full min-h-[400px] bg-white dark:bg-dark-surface rounded-[32px] border-2 border-dashed border-gray-100 dark:border-white/5 flex flex-col items-center justify-center text-gray-300 hover:border-primary hover:text-primary transition-all cursor-pointer group"
