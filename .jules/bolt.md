@@ -1,3 +1,7 @@
+## 2026-05-19 - React useDeferredValue for High-Frequency Inputs
+**Learning:** When driving heavy computations or large list updates from high-frequency inputs (like search bars), synchronous filtering blocks the main thread, causing the input to feel laggy.
+**Action:** Use React's `useDeferredValue` to defer the state used in the heavy computation (`useMemo`). This allows the input state to update and render immediately, while the expensive filtering runs in the background.
+
 ## 2026-05-07 - React Component Re-render Optimization\n**Learning:** The dashboard has a long list of complex `IngredientCard` components that update dynamically via state management. Without `React.memo`, typing in the local search filter was causing every single card to re-render on every keystroke because the parent component updated state. \n**Action:** Always verify if child components in large lists should be memoized, especially when the parent frequently updates state unrelated to individual items (like search inputs).
 
 ## 2026-05-11 - Zustand Selector Bottleneck in List Components
