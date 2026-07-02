@@ -1,4 +1,6 @@
-## 2026-05-07 - React Component Re-render Optimization\n**Learning:** The dashboard has a long list of complex `IngredientCard` components that update dynamically via state management. Without `React.memo`, typing in the local search filter was causing every single card to re-render on every keystroke because the parent component updated state. \n**Action:** Always verify if child components in large lists should be memoized, especially when the parent frequently updates state unrelated to individual items (like search inputs).
+## 2026-05-07 - React Component Re-render Optimization
+**Learning:** The dashboard has a long list of complex `IngredientCard` components that update dynamically via state management. Without `React.memo`, typing in the local search filter was causing every single card to re-render on every keystroke because the parent component updated state.
+**Action:** Always verify if child components in large lists should be memoized, especially when the parent frequently updates state unrelated to individual items (like search inputs).
 
 ## 2026-05-11 - Zustand Selector Bottleneck in List Components
 **Learning:** Using an O(N) array search inside a Zustand selector (`selectIsBelowThreshold`) for each item in a rendered list created an O(N²) bottleneck. Whenever the store updated, ALL list items re-evaluated the selector, unnecessarily iterating through the entire inventory array on the main thread.
@@ -42,3 +44,6 @@
 ## 2026-05-19 - React Component Re-render Bottleneck (O(N) List Updates)
 **Learning:** In the `ReviewOrder` page, mapping over the `items` array to render inline `<tr>` elements caused the entire table (all N rows) to re-render whenever a single item's state (like its quantity or checkbox selection) changed. This is because the state updates were handled at the parent (`ReviewOrder`) level without memoizing the individual list items, resulting in an O(N) re-render bottleneck when the dataset scaled.
 **Action:** Always extract inline list items that depend on dynamic state into their own separate components and wrap them in `React.memo()`. Use `useCallback` for event handlers (`onToggle`, `onQuantityChange`) in the parent to pass stable function references down to the memoized children, ensuring O(1) rendering updates when a single item changes.
+## 2026-07-02 - React Deferred Value for High-Frequency Input UI
+**Learning:** In the Dashboard, connecting a high-frequency search input directly to an O(N) array filtering operation causes the main thread to block synchronously on every keystroke, resulting in input jank for large datasets.
+**Action:** Use React's `useDeferredValue` to decouple the input state from the expensive list filtering and rendering loop. This keeps the input responsive while the heavy work runs in the background.
