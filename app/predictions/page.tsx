@@ -259,10 +259,10 @@ export default function Predictions() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
-                    <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest">Week</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Month</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Quarter</button>
+                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg" role="tablist" aria-label="Time range">
+                    <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest" role="tab" aria-selected="true">Week</button>
+                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest" role="tab" aria-selected="false">Month</button>
+                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest" role="tab" aria-selected="false">Quarter</button>
                   </div>
                 </div>
               </div>
