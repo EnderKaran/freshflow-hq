@@ -26,7 +26,7 @@ export async function processSaleAction(productId: string, quantitySold: number)
       data: sale,
       message: "Satış başarıyla işlendi ve stoklar düşüldü." 
     };
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error("Satış Action Hatası:", error.message);
     
     return { 
@@ -63,7 +63,7 @@ export async function processBatchSaleAction(items: { productId: string; quantit
       data: sales,
       message: `${sales.length} satış başarıyla işlendi.`
     };
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error("Toplu Satış Action Hatası:", error.message);
 
     return {
