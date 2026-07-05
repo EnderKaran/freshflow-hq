@@ -15,7 +15,7 @@ async function main() {
   await prisma.sale.deleteMany({});
   await prisma.product.deleteMany({});
   await prisma.inventory.deleteMany({});
-  await (prisma as any).user.deleteMany({});
+  await (prisma as any).user.deleteMany({}); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   // 1. Envanter Kalemleri
   const wagyu = await prisma.inventory.create({
@@ -49,7 +49,7 @@ async function main() {
   });
 
   const hashedPassword = await bcrypt.hash("ender123", 10);
-await (prisma as any).user.create({
+await (prisma as any).user.create({ // eslint-disable-line @typescript-eslint/no-explicit-any
   data: {
     email: "ender@freshflow.com",
     password: hashedPassword,
