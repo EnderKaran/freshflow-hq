@@ -45,22 +45,22 @@ export default function Predictions() {
             </button>
           </div>
           
-          <nav className="space-y-2 flex-1">
-            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest transition-colors" href="/dashboard">
-              <span className="material-icons-round text-xl">dashboard</span>
+          <nav aria-label="Sidebar Navigation" className="space-y-2 flex-1">
+            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest transition-colors" href="/dashboard">
+              <span aria-hidden="true" className="material-icons-round text-xl">dashboard</span>
               Dashboard
             </Link>
-            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest transition-colors" href="/inventory">
-              <span className="material-icons-round text-xl">inventory_2</span>
+            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest transition-colors" href="/inventory">
+              <span aria-hidden="true" className="material-icons-round text-xl">inventory_2</span>
               Inventory
             </Link>
-            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl bg-fresh-forest/5 text-fresh-forest font-semibold transition-colors" href="/predictions">
-              <span className="material-icons-round text-xl">insights</span>
+            <Link aria-current="page" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-fresh-forest/5 text-fresh-forest font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest transition-colors" href="/predictions">
+              <span aria-hidden="true" className="material-icons-round text-xl">insights</span>
               Predictions
               <span className="ml-auto w-2 h-2 rounded-full bg-fresh-primary"></span>
             </Link>
-            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest transition-colors" href="/staffing">
-              <span className="material-icons-round text-xl">people</span>
+            <Link className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-fresh-forest/5 text-fresh-forest/70 hover:text-fresh-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest transition-colors" href="/staffing">
+              <span aria-hidden="true" className="material-icons-round text-xl">people</span>
               Staffing
             </Link>
           </nav>
@@ -219,7 +219,8 @@ export default function Predictions() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="material-icons-round text-fresh-leaf">history</span>
-                    <span>Correlated with last month's Tuesday sales</span>
+{/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <span>Correlated with last month&apos;s Tuesday sales</span>
                   </div>
                 </div>
               </div>
@@ -259,10 +260,10 @@ export default function Predictions() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
-                    <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest">Week</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Month</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Quarter</button>
+                  <div role="group" aria-label="Timeframe selection" className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
+                    <button aria-pressed="true" className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest">Week</button>
+                    <button aria-pressed="false" className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest transition">Month</button>
+                    <button aria-pressed="false" className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest transition">Quarter</button>
                   </div>
                 </div>
               </div>
