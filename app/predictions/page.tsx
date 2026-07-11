@@ -67,7 +67,7 @@ export default function Predictions() {
           
           <div className="mt-auto pt-6 border-t border-fresh-forest/10">
             <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-fresh-forest/5 cursor-pointer">
-              <img alt="Restaurant Manager Portrait" className="w-10 h-10 rounded-full object-cover border-2 border-fresh-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBhQY3iQNFbdgpkx7vSvNCmxrkKV_wU411di0y6AStd2s9ZmEtEQVRJ3WIijTMnp_a195ykEO8o6eqhJJUUM-Fl6PbZ4DyTBgjVgBh0D1ynKZI87p7HRbmggUyvhS6JxOOgo06XmaI1ZFp71XxhwmHwYL018Qw2DttQD5C8CAbDLRaeD41rk0PbgkFpq9M-nK9FvQzBzx-18MJBbOE0V8I3U7aWKDWG6-mQuz-_Q_0QtZnXw6_S9C2WJ1gdmYbMF_E_yPcR8-lgxo"/>
+              <img alt="Restaurant Manager Portrait" className="w-10 h-10 rounded-full object-cover border-2 border-fresh-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBhQY3iQNFbdgpkx7vSvNCmxrkKV_wU411di0y6AStd2s9ZmEtEQVRJ3WIijTMnp_a195ykEO8o6eqhJJUUM-Fl6PbZ4DyTBgjVgBh0D1ynKZI87p7HRbmggUyvhS6JxOOgo06XmaI1ZFp71XxhwmHwYL018Qw2DttQD5C8CAbDLRaeD41rk0PbgkFpq9M-nK9FvQzBzx-18MJBbOE0V8I3U7aWKDWG6-mQuz-_Q_0QtZnXw6_S9C2WJ1gdmYbMF_E_yPcR8-lgxo"/> {/* eslint-disable-line */}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold truncate">Sarah Chen</p>
                 <p className="text-xs text-fresh-forest/60 truncate">Manager</p>
@@ -219,14 +219,14 @@ export default function Predictions() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="material-icons-round text-fresh-leaf">history</span>
-                    <span>Correlated with last month's Tuesday sales</span>
+                    <span>Correlated with last month's Tuesday sales</span> {/* eslint-disable-line */}
                   </div>
                 </div>
               </div>
               
               {/* Decorative Background Graphic */}
               <div className="absolute right-0 bottom-0 h-full w-1/3 opacity-5 pointer-events-none hidden md:block">
-                <img alt="Abstract green data pattern" className="w-full h-full object-cover" style={{ maskImage: "linear-gradient(to left, black, transparent)" }} src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfrqWdSCYzLZ3bFyANPXuNGXRPGPMp8zHir60Vpuie3nfMquz_BKOiMHHDotrf0enhZ7zIbcnld_rlDT1gs4PnG0XODpLuajo7gODCFW1UuX6QjA5zEqla0s4VNAD7rFyXP_HsbAB_1z4b7q76QK1sT95FSEgurDzIYnugiVL4iFAriOlsMyEVEPehk0hPzUgMA5UZ4hvvHHep9j_ZRekmx3-pnHEMt4uoGl-RhP7Nr054Z5hrY763Undaxfo4nNp69ETMjM69gec"/>
+                <img alt="Abstract green data pattern" className="w-full h-full object-cover" style={{ maskImage: "linear-gradient(to left, black, transparent)" }} src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfrqWdSCYzLZ3bFyANPXuNGXRPGPMp8zHir60Vpuie3nfMquz_BKOiMHHDotrf0enhZ7zIbcnld_rlDT1gs4PnG0XODpLuajo7gODCFW1UuX6QjA5zEqla0s4VNAD7rFyXP_HsbAB_1z4b7q76QK1sT95FSEgurDzIYnugiVL4iFAriOlsMyEVEPehk0hPzUgMA5UZ4hvvHHep9j_ZRekmx3-pnHEMt4uoGl-RhP7Nr054Z5hrY763Undaxfo4nNp69ETMjM69gec"/> {/* eslint-disable-line */}
               </div>
             </motion.div>
 
