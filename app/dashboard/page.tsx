@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useDeferredValue } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getInventoryItems } from "@/lib/actions/inventory.actions";
 import { getAdjustedSalesForecast } from "@/lib/transactions/weatherService";
@@ -17,6 +17,10 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("All Items");
   const [weatherData, setWeatherData] = useState<any>(null);
+
+  // ⚡ Bolt Optimization: Defer the search query to keep the input responsive.
+  // The UI will remain fluid while the heavy list filtering happens in the background.
+  const deferredSearchQuery = useDeferredValue(searchQuery);
 
   // 1. Veri Senkronizasyonu (Neon DB + Weather API)
   useEffect(() => {
@@ -59,14 +63,15 @@ export default function DashboardPage() {
   const filteredIngredients = useMemo(() => {
     // ⚡ Bolt Optimization: Added early returns to avoid expensive string allocations
     // (toLowerCase) and includes checks on unselected tabs or empty queries.
-    const lowerSearchQuery = searchQuery.toLowerCase();
+    // Uses deferredSearchQuery so typing doesn't block the main thread.
+    const lowerSearchQuery = deferredSearchQuery.toLowerCase();
     return ingredients.filter((item) => {
       if (activeTab === "Low Stock" && item.stockLevel > item.safetyThreshold) return false;
       if (!lowerSearchQuery) return true;
 
       return item.name.toLowerCase().includes(lowerSearchQuery);
     });
-  }, [ingredients, searchQuery, activeTab]);
+  }, [ingredients, deferredSearchQuery, activeTab]);
 
   // ⚡ Bolt Optimization: Memoize O(N) derived state and avoid array allocations.
   // We use reduce instead of filter(...).length to count the items without allocating
