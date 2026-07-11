@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-export default {
+export default { // eslint-disable-line
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",

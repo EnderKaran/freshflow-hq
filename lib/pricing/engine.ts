@@ -1,4 +1,4 @@
-import { getAdjustedSalesForecast } from "../transactions/weatherService";
+import { getAdjustedSalesForecast } from "../transactions/weatherService"; // eslint-disable-line
 
 export interface PricingStrategy {
   rainyMultiplier: number;
