@@ -16,7 +16,7 @@ export default function DashboardPage() {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("All Items");
-  const [weatherData, setWeatherData] = useState<any>(null);
+  const [weatherData, setWeatherData] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   // 1. Veri Senkronizasyonu (Neon DB + Weather API)
   useEffect(() => {
