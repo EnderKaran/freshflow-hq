@@ -6,7 +6,16 @@ import { revalidatePath } from "next/cache";
 // Tüm envanteri getiren fonksiyon (Zustand'ı beslemek için)
 export async function getInventoryItems() {
   try {
+    // ⚡ Bolt Optimization: Using select clause to fetch only needed fields, preventing
+    // default over-fetching and minimizing egress payload size across the network boundary.
     const items = await prisma.inventory.findMany({
+      select: {
+        id: true,
+        name: true,
+        stockLevel: true,
+        safetyThreshold: true,
+        unit: true,
+      },
       orderBy: { name: 'asc' }
     });
     
