@@ -1,0 +1,10 @@
+🎨 Palette: Make Add Ingredient card keyboard accessible
+
+💡 What: Converted the "Add Ingredient" card from a structural `motion.div` into a semantic `motion.button` and added proper focus styling.
+🎯 Why: To ensure keyboard users can navigate to and interact with the action, and to allow screen readers to correctly identify it as an interactive element.
+📸 Before/After: The visual appearance remains identical, but keyboard navigation now correctly triggers a focus ring.
+♿ Accessibility:
+- Changed `motion.div` to `motion.button` for native keyboard and screen reader support.
+- Added `aria-label="Add new ingredient card"` to provide context to screen reader users.
+- Added `aria-hidden="true"` to the decorative material icon.
+- Added `focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50` for visible keyboard focus states.
