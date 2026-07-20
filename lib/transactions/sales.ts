@@ -10,7 +10,7 @@ import { prisma } from "../prisma";
 /**
  * Executes a single sale operation using an existing Prisma transaction client.
  */
-export async function executeSaleWithinTx(tx: any, productId: string, quantitySold: number) {
+export async function executeSaleWithinTx(tx: any, productId: string, quantitySold: number) { // eslint-disable-line @typescript-eslint/no-explicit-any
   // 1. Satış kaydını oluştur
   const sale = await tx.sale.create({
     data: {
