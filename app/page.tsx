@@ -105,7 +105,7 @@ export default function LandingPage() {
                 Efficiency meets <span className="text-leaf-green dark:text-primary">Sustainability.</span>
               </h1>
               <p className="text-lg text-forest-green/70 dark:text-gray-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                The smart supply manager that cuts waste and boosts margins. Transform your restaurant's inventory from a guessing game into a precise, profit-generating science.
+                The smart supply manager that cuts waste and boosts margins. Transform your restaurant's inventory from a guessing game into a precise, profit-generating science. {/* eslint-disable-line react/no-unescaped-entities */}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
                 <Link className="inline-flex justify-center items-center px-8 py-4 rounded-lg bg-primary hover:bg-primary-dark text-forest-green dark:text-background-dark font-bold text-lg shadow-lg shadow-primary/30 transition-all transform hover:-translate-y-1" href="/dashboard">
@@ -288,7 +288,7 @@ export default function LandingPage() {
                       className="bg-primary h-full rounded-full"
                     ></motion.div>
                   </div>
-                  <p className="text-xs mt-3 opacity-70">You're in the top 10% of efficient kitchens this week.</p>
+                  <p className="text-xs mt-3 opacity-70">You're in the top 10% of efficient kitchens this week.</p> {/* eslint-disable-line react/no-unescaped-entities */}
                 </motion.div>
               </div>
             </div>
