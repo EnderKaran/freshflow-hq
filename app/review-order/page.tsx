@@ -174,7 +174,7 @@ export default function ReviewOrder() {
         <div className="mb-10">
           <h1 className="text-3xl font-extrabold tracking-tight mb-2">Review & Confirm Order</h1>
           <p className="text-slate-500 dark:text-slate-400 max-w-2xl">
-            Review the AI-generated supply list based on next week's demand forecast. Adjust quantities as needed.
+            Review the AI-generated supply list based on next week&apos;s demand forecast. Adjust quantities as needed.
           </p>
         </div>
 
@@ -259,7 +259,7 @@ export default function ReviewOrder() {
                 <div>
                   <p className="text-emerald-700 dark:text-emerald-400 font-black text-lg">12% Reduction</p>
                   <p className="text-xs text-emerald-600/80 dark:text-emerald-400/60 leading-relaxed mt-1">
-                    By using AI predictions, you're preventing approx. <b>45 lbs</b> of food waste this week.
+                    By using AI predictions, you&apos;re preventing approx. <b>45 lbs</b> of food waste this week.
                   </p>
                 </div>
               </div>
