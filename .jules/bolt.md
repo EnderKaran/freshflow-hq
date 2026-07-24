@@ -42,3 +42,7 @@
 ## 2026-05-19 - React Component Re-render Bottleneck (O(N) List Updates)
 **Learning:** In the `ReviewOrder` page, mapping over the `items` array to render inline `<tr>` elements caused the entire table (all N rows) to re-render whenever a single item's state (like its quantity or checkbox selection) changed. This is because the state updates were handled at the parent (`ReviewOrder`) level without memoizing the individual list items, resulting in an O(N) re-render bottleneck when the dataset scaled.
 **Action:** Always extract inline list items that depend on dynamic state into their own separate components and wrap them in `React.memo()`. Use `useCallback` for event handlers (`onToggle`, `onQuantityChange`) in the parent to pass stable function references down to the memoized children, ensuring O(1) rendering updates when a single item changes.
+
+## 2026-05-20 - React useDeferredValue for High-Frequency Inputs
+**Learning:** When a search input drives the filtering of a large list (like `filteredIngredients`), updating the state triggers a synchronous re-render of the list on every keystroke. This blocks the main thread and makes the input feel sluggish and unresponsive.
+**Action:** Use React's `useDeferredValue` to wrap the high-frequency state (e.g., `const deferredSearchQuery = useDeferredValue(searchQuery);`) and use the deferred value for the expensive `useMemo` filtering and list rendering. This allows the input to remain highly responsive while the heavy work is processed in the background without blocking the UI.
