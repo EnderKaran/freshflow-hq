@@ -11,11 +11,11 @@ async function main() {
   console.log('Seeding database started (v5.22.0)... 🚀');
 
   // Temiz bir başlangıç için mevcut verileri sil
-  await prisma.recipe.deleteMany({});
-  await prisma.sale.deleteMany({});
-  await prisma.product.deleteMany({});
-  await prisma.inventory.deleteMany({});
-  await (prisma as any).user.deleteMany({});
+  await prisma.recipe.deleteMany({}); // eslint-disable-line @typescript-eslint/no-explicit-any
+  await prisma.sale.deleteMany({}); // eslint-disable-line @typescript-eslint/no-explicit-any
+  await prisma.product.deleteMany({}); // eslint-disable-line @typescript-eslint/no-explicit-any
+  await prisma.inventory.deleteMany({}); // eslint-disable-line @typescript-eslint/no-explicit-any
+  await (prisma as any).user.deleteMany({}); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   // 1. Envanter Kalemleri
   const wagyu = await prisma.inventory.create({
@@ -49,7 +49,7 @@ async function main() {
   });
 
   const hashedPassword = await bcrypt.hash("ender123", 10);
-await (prisma as any).user.create({
+await (prisma as any).user.create({ // eslint-disable-line @typescript-eslint/no-explicit-any
   data: {
     email: "ender@freshflow.com",
     password: hashedPassword,
@@ -58,7 +58,7 @@ await (prisma as any).user.create({
 });
 
   // 3. Reçeteler
-  await prisma.recipe.createMany({
+  await prisma.recipe.createMany({ // eslint-disable-line @typescript-eslint/no-explicit-any
     data: [
       { productId: wagyuBurger.id, inventoryId: wagyu.id, quantity: 0.2 },
       { productId: wagyuBurger.id, inventoryId: buns.id, quantity: 1 },

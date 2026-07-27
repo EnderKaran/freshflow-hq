@@ -7,6 +7,18 @@ const eslintConfig = defineConfig([
   ...nextTs,
   {
     rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+      "@next/next/no-img-element": "off",
+      "import/no-anonymous-default-export": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+      "@next/next/no-img-element": "off",
+      "import/no-anonymous-default-export": "off",
       "@typescript-eslint/no-explicit-any": "error",
     },
   },

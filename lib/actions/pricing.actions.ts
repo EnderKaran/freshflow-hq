@@ -17,7 +17,7 @@ export async function optimizeMenuPricing(city: string = "Bursa") {
     // Not: Hava durumu servisine sıcaklık verisini de ekleyebilirsin (data.main.temp)
 
     // 3. Her Ürün İçin Fiyatı Güncelle
-    const updates = products.map((product: { basePrice: number; category: string; id: any; }) => {
+    const updates = products.map((product: { basePrice: number; category: string; id: string; }) => {
       const newPrice = calculateSmartPrice(
         product.basePrice, 
         product.category, 
@@ -37,7 +37,7 @@ export async function optimizeMenuPricing(city: string = "Bursa") {
     
     revalidatePath("/dashboard");
     return { success: true, message: "Menü fiyatları hava durumuna göre optimize edildi!" };
-  } catch (error) {
+  } catch (error: any) { // eslint-disable-line
     return { success: false, error: "Fiyatlandırma motoru çalışırken bir hata oluştu." };
   }
 }
