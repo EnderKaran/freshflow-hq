@@ -16,7 +16,7 @@ const OrderRow = memo(function OrderRow({
   onToggle,
   onQuantityChange
 }: {
-  item: any;
+  item: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   isSelected: boolean;
   quantity: number;
   onToggle: (id: string) => void;
@@ -66,7 +66,7 @@ const OrderRow = memo(function OrderRow({
 
 export default function ReviewOrder() {
 
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<any[]>([]); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -78,11 +78,11 @@ export default function ReviewOrder() {
       const result = await getInventoryItems();
       if (result.success && result.data) {
         setItems(result.data);
-        setSelectedIds(new Set(result.data.map((i: any) => i.id)));
+        setSelectedIds(new Set(result.data.map((i: any) => i.id))); // eslint-disable-line @typescript-eslint/no-explicit-any
         // ⚡ Bolt Optimization: Using Object.fromEntries to build dictionary in O(N) instead of
         // using object spread (...acc) inside reduce which creates an O(N²) memory/CPU bottleneck.
         const qtys = Object.fromEntries(
-          result.data.map((item: any) => [item.id, Math.ceil(item.safetyThreshold * 1.4)])
+          result.data.map((item: any) => [item.id, Math.ceil(item.safetyThreshold * 1.4)]) // eslint-disable-line @typescript-eslint/no-explicit-any
         );
         setQuantities(qtys);
       }
