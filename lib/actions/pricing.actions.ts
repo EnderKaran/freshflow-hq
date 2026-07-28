@@ -11,13 +11,19 @@ export async function optimizeMenuPricing(city: string = "Bursa") {
     // 1 & 2. Güncel Hava Durumunu Al ve Tüm Ürünleri Getir (Eşzamanlı)
     const [weather, products] = await Promise.all([
       getAdjustedSalesForecast(100, city),
-      prisma.product.findMany()
+      prisma.product.findMany({
+        select: {
+          id: true,
+          basePrice: true,
+          category: true
+        }
+      })
     ]);
     const isRainy = weather.isRainy;
     // Not: Hava durumu servisine sıcaklık verisini de ekleyebilirsin (data.main.temp)
 
     // 3. Her Ürün İçin Fiyatı Güncelle
-    const updates = products.map((product: { basePrice: number; category: string; id: any; }) => {
+    const updates = products.map((product: { basePrice: number; category: string; id: any; }) => { // eslint-disable-line
       const newPrice = calculateSmartPrice(
         product.basePrice, 
         product.category, 
