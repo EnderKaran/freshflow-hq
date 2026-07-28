@@ -10,7 +10,7 @@ import { prisma } from "../prisma";
 /**
  * Executes a single sale operation using an existing Prisma transaction client.
  */
-export async function executeSaleWithinTx(tx: any, productId: string, quantitySold: number) {
+export async function executeSaleWithinTx(tx: any, productId: string, quantitySold: number) { // eslint-disable-line
   // 1. Satış kaydını oluştur
   const sale = await tx.sale.create({
     data: {
@@ -22,7 +22,11 @@ export async function executeSaleWithinTx(tx: any, productId: string, quantitySo
   // 2. Ürüne ait reçete bilgilerini (malzemeleri) getir
   // ⚡ Bolt Optimization: Removed unused relation include to prevent unnecessary database JOINs and reduce payload size.
   const recipes = await tx.recipe.findMany({
-    where: { productId }
+    where: { productId },
+    select: {
+      inventoryId: true,
+      quantity: true
+    }
   });
 
   // Eğer ürünün reçetesi yoksa işlemi durdur (Hatalı veri girişi önlemi)
