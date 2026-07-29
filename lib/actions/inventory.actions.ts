@@ -7,7 +7,14 @@ import { revalidatePath } from "next/cache";
 export async function getInventoryItems() {
   try {
     const items = await prisma.inventory.findMany({
-      orderBy: { name: 'asc' }
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        stockLevel: true,
+        safetyThreshold: true,
+        unit: true,
+      }
     });
     
     return { success: true, data: items };
