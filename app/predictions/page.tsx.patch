@@ -1,0 +1,47 @@
+--- app/predictions/page.tsx
++++ app/predictions/page.tsx
+@@ -7,6 +7,7 @@
+ export default function Predictions() {
+   // Mobil menü için state
+   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
++  const [activeTimeframe, setActiveTimeframe] = useState('Week');
+
+   return (
+     <div className="bg-fresh-rose text-fresh-forest font-display min-h-screen selection:bg-fresh-salmon selection:text-fresh-forest">
+@@ -259,10 +260,35 @@
+                     </div>
+                   </div>
+
+-                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
+-                    <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest">Week</button>
+-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Month</button>
+-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Quarter</button>
++                  <div
++                    className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg"
++                    role="group"
++                    aria-label="Timeframe selection"
++                  >
++                    <button
++                      className={`px-3 py-1.5 rounded-md text-xs transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest ${activeTimeframe === 'Week' ? 'bg-white shadow-sm font-bold text-fresh-forest border border-transparent' : 'hover:bg-white/50 font-medium text-fresh-forest/60 border border-transparent'}`}
++                      onClick={() => setActiveTimeframe('Week')}
++                      aria-pressed={activeTimeframe === 'Week'}
++                    >
++                      Week
++                    </button>
++                    <button
++                      className={`px-3 py-1.5 rounded-md text-xs transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest ${activeTimeframe === 'Month' ? 'bg-white shadow-sm font-bold text-fresh-forest border border-transparent' : 'hover:bg-white/50 font-medium text-fresh-forest/60 border border-transparent'}`}
++                      onClick={() => setActiveTimeframe('Month')}
++                      aria-pressed={activeTimeframe === 'Month'}
++                    >
++                      Month
++                    </button>
++                    <button
++                      className={`px-3 py-1.5 rounded-md text-xs transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest ${activeTimeframe === 'Quarter' ? 'bg-white shadow-sm font-bold text-fresh-forest border border-transparent' : 'hover:bg-white/50 font-medium text-fresh-forest/60 border border-transparent'}`}
++                      onClick={() => setActiveTimeframe('Quarter')}
++                      aria-pressed={activeTimeframe === 'Quarter'}
++                    >
++                      Quarter
++                    </button>
+                   </div>
+                 </div>
+               </div>
