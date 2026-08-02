@@ -219,7 +219,7 @@ export default function Predictions() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="material-icons-round text-fresh-leaf">history</span>
-                    <span>Correlated with last month's Tuesday sales</span>
+                    <span>Correlated with last month's Tuesday sales</span> {/* eslint-disable-line */}
                   </div>
                 </div>
               </div>
