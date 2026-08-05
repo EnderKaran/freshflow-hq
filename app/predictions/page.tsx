@@ -219,7 +219,7 @@ export default function Predictions() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="material-icons-round text-fresh-leaf">history</span>
-                    <span>Correlated with last month's Tuesday sales</span>
+                    <span>Correlated with last month&apos;s Tuesday sales</span>
                   </div>
                 </div>
               </div>
@@ -259,10 +259,25 @@ export default function Predictions() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg">
-                    <button className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest">Week</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Month</button>
-                    <button className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition">Quarter</button>
+                  <div className="flex items-center gap-2 bg-fresh-forest/5 p-1 rounded-lg" role="group" aria-label="Timeframe selector">
+                    <button
+                      className="px-3 py-1.5 bg-white shadow-sm rounded-md text-xs font-bold text-fresh-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-primary"
+                      aria-pressed="true"
+                    >
+                      Week
+                    </button>
+                    <button
+                      className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-primary"
+                      aria-pressed="false"
+                    >
+                      Month
+                    </button>
+                    <button
+                      className="px-3 py-1.5 hover:bg-white/50 rounded-md text-xs font-medium text-fresh-forest/60 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-primary"
+                      aria-pressed="false"
+                    >
+                      Quarter
+                    </button>
                   </div>
                 </div>
               </div>
