@@ -1,0 +1,3 @@
+## 2025-08-05 - Accessible Segmented Controls
+**Learning:** Found a group of inline buttons (Week, Month, Quarter) acting as a toggle/segmented control but lacking semantics and keyboard focus states. Standardizing on `role="group"` with `aria-label`, individual `aria-pressed` states, and `focus-visible:ring-*` ensures the design system supports screen readers and keyboard users effectively for these specific UI patterns.
+**Action:** Always wrap related toggle button groups in a container with `role="group"` and `aria-label`, track active state with `aria-pressed`, and apply explicit focus rings (`focus-visible:ring-*`) to maintain accessibility without altering existing UI visual styles.
