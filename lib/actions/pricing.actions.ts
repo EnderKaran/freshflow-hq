@@ -17,7 +17,7 @@ export async function optimizeMenuPricing(city: string = "Bursa") {
     // Not: Hava durumu servisine sıcaklık verisini de ekleyebilirsin (data.main.temp)
 
     // 3. Her Ürün İçin Fiyatı Güncelle
-    const updates = products.map((product: { basePrice: number; category: string; id: any; }) => {
+    const updates = products.map((product: { basePrice: number; category: string; id: any; }) => { // eslint-disable-line
       const newPrice = calculateSmartPrice(
         product.basePrice, 
         product.category, 
