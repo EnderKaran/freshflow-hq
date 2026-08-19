@@ -194,7 +194,7 @@ export default function DashboardPage() {
                 className={`pb-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm ${
                   activeTab === tab 
                     ? "text-primary border-b-2 border-primary" 
-                    : "text-gray-400 hover:text-forest-green"
+                    : "text-gray-400 hover:text-forest-green border-b-2 border-transparent"
                 }`}
               >
                 {tab} 
@@ -227,15 +227,16 @@ export default function DashboardPage() {
             </AnimatePresence>
 
             {!searchQuery && activeTab === "All Items" && (
-              <motion.div 
+              <motion.button
+                aria-label="Add new ingredient"
                 whileHover={{ scale: 1.02 }}
-                className="snap-center w-[310px] h-full min-h-[400px] bg-white dark:bg-dark-surface rounded-[32px] border-2 border-dashed border-gray-100 dark:border-white/5 flex flex-col items-center justify-center text-gray-300 hover:border-primary hover:text-primary transition-all cursor-pointer group"
+                className="snap-center w-[310px] h-full min-h-[400px] bg-white dark:bg-dark-surface rounded-[32px] border-2 border-dashed border-gray-100 dark:border-white/5 flex flex-col items-center justify-center text-gray-300 hover:border-primary hover:text-primary transition-all cursor-pointer group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               >
                 <div className="w-16 h-16 rounded-full bg-gray-50 dark:bg-gray-800/50 flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                  <span className="material-icons text-3xl">add</span>
+                  <span aria-hidden="true" className="material-icons text-3xl">add</span>
                 </div>
                 <span className="font-bold text-[10px] uppercase tracking-[0.2em]">Add Ingredient</span>
-              </motion.div>
+              </motion.button>
             )}
           </div>
         </div>
