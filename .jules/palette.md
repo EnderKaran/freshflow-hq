@@ -14,3 +14,12 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-05-20 - Accessible Custom Tablists
+**Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
+**Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present.
+## 2024-08-28 - Transparent Borders for Layout Shifts
+**Learning:** Adding borders to active states (like tabs or cards) causes layout shifts (jank) if the inactive state doesn't have an equivalent border width.
+**Action:** When applying borders to active states (e.g., `border-b-2`), always apply a `border-transparent` class of the exact same width to the inactive state (e.g., `border-b-2 border-transparent`) to reserve the space and prevent jank.
+## 2024-08-28 - Grouped Timeframe Selectors
+**Learning:** Groups of unassociated buttons used for toggle states (like Week/Month/Quarter timeframe selectors) are inaccessible and lack context for screen reader users.
+**Action:** Wrap grouped toggle buttons in a parent with `role="group"` and `aria-label`. Use `aria-pressed="true/false"` on the buttons to indicate state, and ensure they have explicit `focus:outline-none focus-visible:ring-*` classes for keyboard navigability.
