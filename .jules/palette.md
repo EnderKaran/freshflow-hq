@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-05-21 - Accessible Segmented Controls
+**Learning:** Segmented controls or toggle button groups without structural grouping (`role="group"`) and active state indicators (`aria-pressed`) lack context for screen readers. Keyboard users also suffer when these elements lack visible focus styles.
+**Action:** Always wrap grouped toggle buttons in a container with `role="group"` and an `aria-label`. Use `aria-pressed="true"` on the active button, `aria-pressed="false"` on inactive ones, and ensure explicit keyboard focus styling (`focus-visible:ring-*`).
