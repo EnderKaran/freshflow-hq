@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-05-21 - Semantic Action Cards
+**Learning:** Structural elements like `<div>` or `<motion.div>` are sometimes used to create interactive action cards (e.g., "Add Item" cards). This breaks accessibility as they cannot receive keyboard focus naturally and do not announce themselves as interactive to screen readers.
+**Action:** When creating interactive action cards, use semantic `<button>` (or `<motion.button>`) tags. Ensure they include an explicit `aria-label`, visible focus states (`focus-visible:ring-*`), and hide inner decorative icons with `aria-hidden="true"`.
