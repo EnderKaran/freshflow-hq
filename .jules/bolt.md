@@ -42,3 +42,7 @@
 ## 2026-05-19 - React Component Re-render Bottleneck (O(N) List Updates)
 **Learning:** In the `ReviewOrder` page, mapping over the `items` array to render inline `<tr>` elements caused the entire table (all N rows) to re-render whenever a single item's state (like its quantity or checkbox selection) changed. This is because the state updates were handled at the parent (`ReviewOrder`) level without memoizing the individual list items, resulting in an O(N) re-render bottleneck when the dataset scaled.
 **Action:** Always extract inline list items that depend on dynamic state into their own separate components and wrap them in `React.memo()`. Use `useCallback` for event handlers (`onToggle`, `onQuantityChange`) in the parent to pass stable function references down to the memoized children, ensuring O(1) rendering updates when a single item changes.
+
+## 2026-05-20 - React Synchronous Rendering Bottleneck (Search Input)
+**Learning:** Updating a large filtered list synchronously on every keystroke blocks the main thread, causing noticeable UI jank and input latency when users type rapidly into the search bar. React attempts to re-render the entire filtered list before allowing the input field to display the typed character.
+**Action:** Always wrap high-frequency inputs that drive large list updates (like search queries) with `useDeferredValue`. This allows React to prioritize the input field's render and perform the expensive list filtering and rendering in the background, keeping the UI responsive.
