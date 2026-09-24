@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-05-22 - Interactive Cards as Buttons and Tab Jank
+**Learning:** Interactive UI cards (like "Add Ingredient") made with structural elements (e.g., `<div>` or `<motion.div>`) lack semantic meaning and keyboard focus styles, completely breaking the experience for keyboard-only users. Additionally, changing border widths (e.g. from 0 to 2px) on active vs inactive tabs causes layout jank.
+**Action:** When creating interactive action cards, always use semantic `<button>` tags (or `<motion.button>`). Ensure they include explicit `focus:outline-none focus-visible:ring-*` styles and `aria-hidden="true"` on inner decorative icons. To prevent tab layout shifts, apply a transparent border (e.g. `border-transparent`) to inactive tabs matching the active border width.
