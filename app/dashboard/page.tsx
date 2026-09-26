@@ -227,15 +227,15 @@ export default function DashboardPage() {
             </AnimatePresence>
 
             {!searchQuery && activeTab === "All Items" && (
-              <motion.div 
+              <motion.button
                 whileHover={{ scale: 1.02 }}
-                className="snap-center w-[310px] h-full min-h-[400px] bg-white dark:bg-dark-surface rounded-[32px] border-2 border-dashed border-gray-100 dark:border-white/5 flex flex-col items-center justify-center text-gray-300 hover:border-primary hover:text-primary transition-all cursor-pointer group"
+                className="snap-center w-[310px] h-full min-h-[400px] bg-white dark:bg-dark-surface rounded-[32px] border-2 border-dashed border-gray-100 dark:border-white/5 flex flex-col items-center justify-center text-gray-300 hover:border-primary hover:text-primary transition-all cursor-pointer group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               >
                 <div className="w-16 h-16 rounded-full bg-gray-50 dark:bg-gray-800/50 flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                  <span className="material-icons text-3xl">add</span>
+                  <span className="material-icons text-3xl" aria-hidden="true">add</span>
                 </div>
                 <span className="font-bold text-[10px] uppercase tracking-[0.2em]">Add Ingredient</span>
-              </motion.div>
+              </motion.button>
             )}
           </div>
         </div>
@@ -244,7 +244,6 @@ export default function DashboardPage() {
       {/* Floating UI Elements */}
       <div className="fixed bottom-10 right-10 z-50">
         <motion.button 
-          aria-label="Add new item"
           whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.9 }}
           className="w-14 h-14 bg-forest-green text-white rounded-2xl shadow-2xl flex items-center justify-center focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50 transition-shadow"
