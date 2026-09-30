@@ -194,7 +194,7 @@ export default function DashboardPage() {
                 className={`pb-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm ${
                   activeTab === tab 
                     ? "text-primary border-b-2 border-primary" 
-                    : "text-gray-400 hover:text-forest-green"
+                    : "text-gray-400 border-b-2 border-transparent hover:text-forest-green"
                 }`}
               >
                 {tab} 
