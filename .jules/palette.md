@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2025-02-26 - Accessible Clickable Cards
+**Learning:** Using `div` elements for interactive, clickable cards (like the "Add Ingredient" card) prevents keyboard users from focusing on and interacting with them. Even if `cursor-pointer` is applied, screen readers won't recognize it as a button.
+**Action:** When creating clickable card-like elements, always use `<button>` (or `<motion.button>`) with `type="button"`. Apply `focus:outline-none` to remove default rings, and add custom `focus-visible:ring` utilities for keyboard focus visibility. Hide decorative icons with `aria-hidden="true"`.
