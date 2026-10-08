@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-10-08 - Accessible Interactive Elements in framer-motion
+**Learning:** Using generic HTML elements like `<motion.div>` with `cursor-pointer` to act as interactive cards (like the "Add Ingredient" placeholder) completely breaks accessibility because they lack semantic meaning, cannot be focused via keyboard, and aren't announced as actionable by screen readers.
+**Action:** Always convert interactive wrapper elements from `<div>` to semantic `<button type="button">`. Ensure they have visual focus rings (`focus-visible:ring-4`), and hide any decorative internal icons (like `material-icons`) with `aria-hidden="true"` so screen readers only announce the meaningful text payload.
