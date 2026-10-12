@@ -1,0 +1,4 @@
+1. Implement accessibility fixes on the "Time Range" tabs in `app/predictions/page.tsx`
+2. Update `.jules/palette.md` to reflect learnings
+3. Verify fixes locally
+4. Submit PR
