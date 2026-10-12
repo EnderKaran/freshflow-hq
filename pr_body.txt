@@ -1,0 +1,14 @@
+**What:**
+Added semantic ARIA tablist roles, aria-selected states, and keyboard focus-visible styles to the time range filter buttons (Week, Month, Quarter) in the predictions dashboard.
+
+**Why:**
+The custom filter buttons previously lacked semantic meaning, making it difficult for screen reader users to understand they functioned as a group of mutually exclusive options. Furthermore, they lacked keyboard focus indicators, breaking accessibility for non-mouse users.
+
+**Before/After:**
+Before: `<button className="px-3 py-1.5...">Week</button>` (no focus states, no semantic role).
+After: `<button role="tab" aria-selected="true" className="... focus:outline-none focus-visible:ring-2...">Week</button>` grouped inside a `role="tablist"` container.
+
+**Accessibility:**
+- Added `role="tablist"` and `aria-label` to the container.
+- Added `role="tab"` and `aria-selected` to the individual toggle buttons.
+- Implemented `focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-forest focus-visible:ring-offset-1` for clear keyboard navigation support.
