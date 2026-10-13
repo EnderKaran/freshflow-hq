@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-05-23 - Accessible Clickable Cards
+**Learning:** In the FreshFlow app, empty-state cards (like the "Add Ingredient" tile) built with motion.div lack semantic button roles and keyboard focus styles, making them inaccessible to keyboard and screen reader users.
+**Action:** When creating clickable cards with Framer Motion, convert motion.div to <motion.button type="button">. Remove default browser focus with focus:outline-none, apply custom focus-visible:ring utilities, and ensure decorative inner icons are hidden using aria-hidden="true".
