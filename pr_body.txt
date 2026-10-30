@@ -1,0 +1,4 @@
+💡 What: Converted the non-semantic \`motion.div\` "Add Ingredient" card to a semantic \`motion.button\` in the dashboard.
+🎯 Why: To ensure keyboard navigation works seamlessly and screen readers properly announce the interactive element.
+📸 Before/After: N/A - Visual change is minimal but focus states are now visible.
+♿ Accessibility: Changed element to \`button\`, added \`focus-visible\` styles for keyboard focus, and set \`aria-hidden="true"\` on the decorative icon.
