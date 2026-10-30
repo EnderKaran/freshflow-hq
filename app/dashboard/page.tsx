@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useDeferredValue } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getInventoryItems } from "@/lib/actions/inventory.actions";
 import { getAdjustedSalesForecast } from "@/lib/transactions/weatherService";
@@ -56,17 +56,21 @@ export default function DashboardPage() {
   };
 
   // 3. Filtreleme Mantığı
+  // ⚡ Bolt Optimization: Wrap search query with useDeferredValue to prevent main thread blocking
+  // on every keystroke when filtering the long list of IngredientCard components.
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+
   const filteredIngredients = useMemo(() => {
     // ⚡ Bolt Optimization: Added early returns to avoid expensive string allocations
     // (toLowerCase) and includes checks on unselected tabs or empty queries.
-    const lowerSearchQuery = searchQuery.toLowerCase();
+    const lowerSearchQuery = deferredSearchQuery.toLowerCase();
     return ingredients.filter((item) => {
       if (activeTab === "Low Stock" && item.stockLevel > item.safetyThreshold) return false;
       if (!lowerSearchQuery) return true;
 
       return item.name.toLowerCase().includes(lowerSearchQuery);
     });
-  }, [ingredients, searchQuery, activeTab]);
+  }, [ingredients, deferredSearchQuery, activeTab]);
 
   // ⚡ Bolt Optimization: Memoize O(N) derived state and avoid array allocations.
   // We use reduce instead of filter(...).length to count the items without allocating
