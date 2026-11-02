@@ -14,3 +14,6 @@
 ## 2024-05-20 - Accessible Custom Tablists
 **Learning:** When building custom tab interfaces using simple `<div>` and `<button>` elements, screen readers do not understand the relationship or state of the tabs. Additionally, custom tabs often lack proper keyboard focus styling.
 **Action:** Always wrap custom tab buttons in a container with `role="tablist"` and an `aria-label`. Add `role="tab"` to the individual buttons, use `aria-selected` to communicate the active state, and ensure `focus:outline-none focus-visible:ring-*` classes are present for keyboard accessibility.
+## 2024-11-03 - Accessible Interactive Motion Cards
+**Learning:** In the FreshFlow app, large non-semantic interactive cards like `<motion.div>` configured for adding items visually appear clickable but are entirely inaccessible to keyboard and screen reader users because they lack semantic button roles, visual focus indicators, and `aria-hidden` attributes on decorative icons.
+**Action:** Always convert interactive, clickable `<motion.div>` elements to `<motion.button type="button">`, remove default browser focus outlines with `focus:outline-none`, apply custom visual focus cues using `focus-visible:ring`, add an `aria-label`, and hide inner decorative icons with `aria-hidden="true"`.
